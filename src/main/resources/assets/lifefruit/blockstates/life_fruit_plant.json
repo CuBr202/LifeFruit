@@ -1,13 +1,7 @@
 {
   "variants": {
-    "age=0": {
-      "model": "lifefruit:block/life_fruit_crop_stage_0"
-    },
-    "age=1": {
-      "model": "lifefruit:block/life_fruit_crop_stage_1"
-    },
-    "age=2": {
-      "model": "lifefruit:block/life_fruit_crop_stage_2"
+    "":{
+      "model": "lifefruit:block/life_fruit_plant"
     }
   }
 }

@@ -1,0 +1,16 @@
+{
+  "lifefruit.creativetab.base": "生命果",
+
+  "tooltip.lifefruit.when_eat": "§9当食用时：",
+  "tooltip.lifefruit.life_fruit": "  §a增加1点生命上限",
+  "tooltip.lifefruit.ender_dragon_fruit": "  §a增加1点生命上限",
+
+  "block.lifefruit.life_fruit_vine_crop": "生命藤",
+  "block.lifefruit.ender_dragon_fruit_crop": "影龙果植株",
+  "block.lifefruit.life_fruit_plant": "生命果植株",
+
+  "item.lifefruit.life_fruit": "生命果",
+  "item.lifefruit.life_fruit_with_vine": "缠藤生命果",
+  "item.lifefruit.vine": "生命藤条",
+  "item.lifefruit.ender_dragon_fruit": "影龙果"
+}

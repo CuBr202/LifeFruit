@@ -14,20 +14,20 @@
               "functions": [
                 {
                   "function": "minecraft:set_count",
-                  "count": 1,
-                  "conditions": [
-                    {
-                      "condition": "minecraft:block_state_property",
-                      "block": "lifefruit:ender_dragon_fruit_crop",
-                      "properties": {
-                        "age": "3"
-                      }
-                    },
-                    {
-                      "condition": "minecraft:random_chance",
-                      "chance": 0.75
-                    }
-                  ]
+                  "count": 2
+                }
+              ],
+              "conditions": [
+                {
+                  "condition": "minecraft:random_chance",
+                  "chance": 0.75
+                },
+                {
+                  "condition": "minecraft:block_state_property",
+                  "block": "lifefruit:ender_dragon_fruit_crop",
+                  "properties": {
+                    "age": "3"
+                  }
                 }
               ]
             },
@@ -53,6 +53,5 @@
     {
       "function": "minecraft:explosion_decay"
     }
-  ],
-  "random_sequence": "minecraft:blocks/wheat"
+  ]
 }

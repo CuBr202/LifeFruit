@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "lifefruit:item/vine"
+    "layer0": "lifefruit:block/life_fruit_plant"
   }
 }
