@@ -16,7 +16,9 @@ public class CommonEventHandler {
         int oldLifeHealth = event.getOriginal().getPersistentData().getInt("life_health");
         int oldDragonHealth = event.getOriginal().getPersistentData().getInt("dragon_health");
         event.getEntity().getPersistentData().putInt("life_health",oldLifeHealth);
+        event.getEntity().getPersistentData().putInt("present_life_health",oldLifeHealth);
         event.getEntity().getPersistentData().putInt("dragon_health",oldDragonHealth);
+        event.getEntity().getPersistentData().putInt("present_dragon_health",oldLifeHealth);
     }
 
     @SubscribeEvent

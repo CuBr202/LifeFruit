@@ -23,8 +23,8 @@ public abstract class PlayerMixin extends LivingEntity{
 
     @Inject(method = "actuallyHurt", at = @At(value = "HEAD"), cancellable = true)
     protected void actuallyHurt(DamageSource source, float damage, CallbackInfo ci){
-        int lifeHealth = this.getPersistentData().getInt("life_health");
-        int dragonHealth = this.getPersistentData().getInt("dragon_health");
+        int lifeHealth = this.getPersistentData().getInt("present_life_health");
+        int dragonHealth = this.getPersistentData().getInt("present_dragon_health");
         damage = this.getDamageAfterArmorAbsorb(source, damage);
         damage = this.getDamageAfterMagicAbsorb(source, damage);
         damage = ForgeHooks.onLivingHurt(this, source, damage);
@@ -35,17 +35,17 @@ public abstract class PlayerMixin extends LivingEntity{
         if (dragonHealth > 0 && lifeHealth > 0 && !this.isInvulnerableTo(source)){
             dragonHealth = (int) (dragonHealth - f1);
             if (dragonHealth >= 0) {
-                this.getPersistentData().putInt("dragon_health", dragonHealth);
+                this.getPersistentData().putInt("present_dragon_health", dragonHealth);
             }else {
                 lifeHealth = lifeHealth - dragonHealth;
                 if (lifeHealth > 0) {
-                    this.getPersistentData().putInt("life_health", lifeHealth);
+                    this.getPersistentData().putInt("present_life_health", lifeHealth);
                 } else if (lifeHealth <= 0) {
-                    this.getPersistentData().putInt("life_health", 0);
+                    this.getPersistentData().putInt("present_life_health", 0);
                     f1 = f1 - dragonHealth - lifeHealth;
                     this.setHealth(this.getHealth() - f1);
                 }
-                this.getPersistentData().putInt("life_health", 0);
+                this.getPersistentData().putInt("present_life_health", 0);
             }
             this.getCombatTracker().recordDamage(source, f1);
             ci.cancel();
@@ -53,10 +53,10 @@ public abstract class PlayerMixin extends LivingEntity{
         {
             lifeHealth = (int) (lifeHealth - f1);
             if (lifeHealth >= 0) {
-                this.getPersistentData().putInt("life_health", lifeHealth);
+                this.getPersistentData().putInt("present_life_health", lifeHealth);
             }else {
                 this.setHealth(this.getHealth() - f1);
-                this.getPersistentData().putInt("life_health", 0);
+                this.getPersistentData().putInt("present_life_health", 0);
             }
             this.getCombatTracker().recordDamage(source, f1);
             this.gameEvent(GameEvent.ENTITY_DAMAGE);
