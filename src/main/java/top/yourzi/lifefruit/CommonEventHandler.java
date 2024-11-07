@@ -1,6 +1,8 @@
 package top.yourzi.lifefruit;
 
 
+import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
+import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -20,5 +22,11 @@ public class CommonEventHandler {
     @SubscribeEvent
     public static void registerCommand(RegisterCommandsEvent event) {
         LFCommand.register(event.getDispatcher());
+    }
+
+    @SubscribeEvent
+    public static void registerOverlay(RegisterGuiOverlaysEvent event) {
+        //event.registerAbove(VanillaGuiOverlay.PLAYER_HEALTH.id(),"life_health", LifeHealthOverlay);
+        //event.registerAbove("dragon_health","life_health", );
     }
 }

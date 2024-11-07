@@ -40,7 +40,7 @@ public class DragonFruitItem extends ItemNameBlockItem {
     public ItemStack finishUsingItem(ItemStack stack, Level level, LivingEntity entity) {
         if (entity instanceof Player) {
             Player player = (Player) entity;
-            if (player.getPersistentData().getInt("dragon_health") < player.getPersistentData().getDouble("life_health")) {
+            if (player.getPersistentData().getInt("dragon_health") < player.getPersistentData().getInt("life_health")) {
                 player.getPersistentData().putInt("dragon_health", player.getPersistentData().getInt("dragon_health") + 1);
             }
             player.displayClientMessage(Component.literal(("dragon_health" + entity.getPersistentData().getInt("dragon_health"))), true);
