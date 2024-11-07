@@ -27,6 +27,7 @@ import org.slf4j.Logger;
 import top.yourzi.lifefruit.world.LFLootAdditions;
 
 // The value here should match an entry in the META-INF/mods.toml file
+
 @Mod(Lifefruit.MODID)
 public class Lifefruit {
 
@@ -48,6 +49,8 @@ public class Lifefruit {
         LFCreativeTab.register(modEventBus);
         LOOT_MODIFIERS.register("loot_additions", LFLootAdditions.CODEC);
         LOOT_MODIFIERS.register(modEventBus);
+
+        MinecraftForge.EVENT_BUS.register(new CommonEventHandler());
 
 
         // Register our mod's ForgeConfigSpec so that Forge can create and load the config file for us
@@ -78,6 +81,7 @@ public class Lifefruit {
             LOGGER.info("HELLO FROM CLIENT SETUP");
         }
     }
+
 
 
 }

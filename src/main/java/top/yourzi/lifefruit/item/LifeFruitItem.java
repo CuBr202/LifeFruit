@@ -1,6 +1,7 @@
 package top.yourzi.lifefruit.item;
 
 
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -36,9 +37,11 @@ public class LifeFruitItem extends Item {
     public ItemStack finishUsingItem(ItemStack stack, Level level, LivingEntity entity) {
         if (entity instanceof Player) {
             Player player = (Player) entity;
-            if (true) {
-                player.setAbsorptionAmount(entity.getAbsorptionAmount() + 1);
+            if (player.getPersistentData().getDouble("life_health") < player.getMaxHealth()) {
+                player.getPersistentData().putDouble("life_health", player.getPersistentData().getDouble("life_health") + 1);
             }
+            player.displayClientMessage(Component.literal(("life_health" + entity.getPersistentData().getDouble("life_health"))), true);
+
 
         }
         return entity.eat(level, stack);

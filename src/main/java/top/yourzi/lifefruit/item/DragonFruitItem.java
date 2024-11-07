@@ -2,6 +2,8 @@ package top.yourzi.lifefruit.item;
 
 
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemNameBlockItem;
@@ -32,5 +34,19 @@ public class DragonFruitItem extends ItemNameBlockItem {
         pTooltipComponents.add(Component.translatable("tooltip.lifefruit.ender_dragon_fruit"));
 
         super.appendHoverText(stack,worldIn, pTooltipComponents, flagIn);
+    }
+
+    @Override
+    public ItemStack finishUsingItem(ItemStack stack, Level level, LivingEntity entity) {
+        if (entity instanceof Player) {
+            Player player = (Player) entity;
+            if (player.getPersistentData().getDouble("dragon_health") < player.getPersistentData().getDouble("life_health")) {
+                player.getPersistentData().putDouble("dragon_health", player.getPersistentData().getDouble("dragon_health") + 1);
+            }
+            player.displayClientMessage(Component.literal(("dragon_health" + entity.getPersistentData().getDouble("dragon_health"))), true);
+
+
+        }
+        return entity.eat(level, stack);
     }
 }
