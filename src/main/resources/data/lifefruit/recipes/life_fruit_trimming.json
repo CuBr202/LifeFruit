@@ -1,0 +1,12 @@
+{
+  "type": "lifefruit:trimming",
+  "ingredients": [
+    {
+      "item": "minecraft:stone"
+    }
+  ],
+  "result": {
+    "item": "minecraft:stone",
+    "count": 1
+  }
+}
