@@ -37,10 +37,10 @@ public class LifeFruitItem extends Item {
     public ItemStack finishUsingItem(ItemStack stack, Level level, LivingEntity entity) {
         if (entity instanceof Player) {
             Player player = (Player) entity;
-            if (player.getPersistentData().getDouble("life_health") < player.getMaxHealth()) {
-                player.getPersistentData().putDouble("life_health", player.getPersistentData().getDouble("life_health") + 1);
+            if (player.getPersistentData().getInt("life_health") < player.getMaxHealth()) {
+                player.getPersistentData().putInt("life_health", player.getPersistentData().getInt("life_health") + 1);
             }
-            player.displayClientMessage(Component.literal(("life_health" + entity.getPersistentData().getDouble("life_health"))), true);
+            player.displayClientMessage(Component.literal(("life_health" + entity.getPersistentData().getInt("life_health"))), true);
 
 
         }
