@@ -3,6 +3,7 @@ package top.yourzi.lifefruit.item;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
@@ -10,6 +11,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import top.yourzi.lifefruit.network.Channel;
+import top.yourzi.lifefruit.network.packet.S2C.LifeHealthPacket;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -37,10 +40,10 @@ public class LifeFruitItem extends Item {
     public ItemStack finishUsingItem(ItemStack stack, Level level, LivingEntity entity) {
         if (entity instanceof Player) {
             Player player = (Player) entity;
-            if (player.getPersistentData().getInt("life_health") < player.getMaxHealth()) {
-                player.getPersistentData().putInt("life_health", player.getPersistentData().getInt("life_health") + 1);
+            if (player.getPersistentData().getInt("max_life_health") < player.getMaxHealth()) {
+                player.getPersistentData().putInt("max_life_health", player.getPersistentData().getInt("max_life_health") + 1);
             }
-            player.displayClientMessage(Component.literal(("life_health" + entity.getPersistentData().getInt("life_health"))), true);
+            player.displayClientMessage(Component.literal(("max_life_health" + entity.getPersistentData().getInt("max_life_health"))), true);
 
 
         }

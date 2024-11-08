@@ -1,4 +1,4 @@
-package top.yourzi.lifefruit;
+package top.yourzi.lifefruit.register;
 
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.item.BlockItem;
@@ -13,6 +13,7 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
+import top.yourzi.lifefruit.Lifefruit;
 import top.yourzi.lifefruit.block.EnderDragonFruitCropBlock;
 import top.yourzi.lifefruit.block.LifeFruitVineCropBlock;
 

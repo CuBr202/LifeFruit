@@ -1,4 +1,4 @@
-package top.yourzi.lifefruit;
+package top.yourzi.lifefruit.register;
 
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemNameBlockItem;
@@ -6,6 +6,7 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
+import top.yourzi.lifefruit.Lifefruit;
 import top.yourzi.lifefruit.item.DragonFruitItem;
 import top.yourzi.lifefruit.item.LifeFruitItem;
 import top.yourzi.lifefruit.item.LifeFruitWithVineItem;

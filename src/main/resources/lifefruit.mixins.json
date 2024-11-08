@@ -5,8 +5,7 @@
   "compatibilityLevel": "JAVA_8",
   "refmap": "lifefruit.refmap.json",
   "mixins": [
-    "PlayerMixin",
-    "ServerPlayerMixin"
+    "PlayerMixin"
   ],
   "client": [
   ],

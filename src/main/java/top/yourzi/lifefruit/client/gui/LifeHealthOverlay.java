@@ -1,47 +1,52 @@
 package top.yourzi.lifefruit.client.gui;
 
-import net.minecraft.Util;
+import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
-import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
-import net.minecraft.client.gui.Gui;
-
-
-import java.util.Random;
+import org.slf4j.Logger;
+import top.yourzi.lifefruit.network.Channel;
+import top.yourzi.lifefruit.network.packet.S2C.LifeHealthPacket;
 
 @OnlyIn(Dist.CLIENT)
-public class LifeHealthOverlay implements IGuiOverlay {
-    private static final ResourceLocation LIFE_HEALTH = new ResourceLocation("textures/gui/life_health.png");
-    private static final ResourceLocation LIFE_HEALTH_HALF = new ResourceLocation("textures/gui/life_health_half.png");
-
-    private Player getCameraPlayer() {
-        return !(Minecraft.getInstance().getCameraEntity() instanceof Player)
-                ? null
-                : (Player) Minecraft.getInstance().getCameraEntity();
-    }
+public class LifeHealthOverlay{
+    private static final ResourceLocation LIFE_HEALTH = new ResourceLocation("lifefruit:textures/gui/life_health.png");
+    private static final ResourceLocation LIFE_HEALTH_HALF = new ResourceLocation("lifefruit:textures/gui/life_health_half.png");
+    private static final Logger LOGGER = LogUtils.getLogger();
 
 
-    @Override
-    public void render(ForgeGui forgeGui, GuiGraphics guiGraphics, float v, int i, int i1) {
-        final Player player = getCameraPlayer();
-        int lifeHealth = player.getPersistentData().getInt("life_health");
 
-        if ( player == null || player.isCreative() || player.isSpectator() || lifeHealth <= 0) return;
 
-        if (lifeHealth % 2 == 0) {
+    public static final IGuiOverlay LIFE_HEALTH_HUD = (gui, guiGraphics, partialTick, screenWidth, screenHeight) -> {
 
-        }else {
+        Minecraft mc = Minecraft.getInstance();
+        Player player = mc.player;
+        if (player == null || player.isCreative() || player.isSpectator()) {return;}
+        int lifeHearts =  player.getPersistentData().getInt("present_life_health") / 2 ;
+        int halfLifeHearts = player.getPersistentData().getInt("present_life_health") % 2;
+        ForgeGui Gui = (ForgeGui) mc.gui;
+        int x = mc.getWindow().getGuiScaledWidth()/2 - 90;
+        int y = mc.getWindow().getGuiScaledHeight() - Gui.rightHeight + 10;
+        if (player.getPersistentData().getInt("present_life_health") <= 0) {return;}
+
+        guiGraphics.blit(LIFE_HEALTH_HALF,x + ((lifeHearts + halfLifeHearts - 1) * 8),y,90,0,0,8,8,
+                8,8) ;
+
+        for(int i = 0; i < lifeHearts; i++) {
+                LOGGER.info("lifeHearts: " + lifeHearts);
+                guiGraphics.blit(LIFE_HEALTH,x + (i * 8),y,90,0,0,8,8,
+                    8,8) ;
 
         }
 
 
-    }
+
+    };
+
+
 }

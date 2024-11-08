@@ -12,7 +12,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.items.ItemHandlerHelper;
-import top.yourzi.lifefruit.LFItems;
+import top.yourzi.lifefruit.register.LFItems;
 
 import java.util.Random;
 

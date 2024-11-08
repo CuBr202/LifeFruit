@@ -1,6 +1,5 @@
 package top.yourzi.lifefruit.block;
 
-import com.mojang.logging.LogUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -29,7 +28,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.ForgeHooks;
-import top.yourzi.lifefruit.LFItems;
+import top.yourzi.lifefruit.register.LFItems;
 
 public class EnderDragonFruitCropBlock extends CropBlock {
     private static final int MAX_AGE = 3;

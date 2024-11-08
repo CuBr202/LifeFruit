@@ -3,15 +3,11 @@ package top.yourzi.lifefruit;
 import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Codec;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.level.ItemLike;
-import net.minecraft.world.level.storage.loot.BuiltInLootTables;
-import net.minecraft.world.level.storage.loot.LootPool;
-import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.loot.IGlobalLootModifier;
-import net.minecraftforge.event.LootTableLoadEvent;
+import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -24,6 +20,12 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.slf4j.Logger;
+import top.yourzi.lifefruit.event.CommonEventListener;
+import top.yourzi.lifefruit.event.ForgeEventListener;
+import top.yourzi.lifefruit.event.ModEventListener;
+import top.yourzi.lifefruit.register.LFBlocks;
+import top.yourzi.lifefruit.register.LFCreativeTab;
+import top.yourzi.lifefruit.register.LFItems;
 import top.yourzi.lifefruit.world.LFLootAdditions;
 
 // The value here should match an entry in the META-INF/mods.toml file
@@ -50,9 +52,9 @@ public class Lifefruit {
         LOOT_MODIFIERS.register("loot_additions", LFLootAdditions.CODEC);
         LOOT_MODIFIERS.register(modEventBus);
 
-        MinecraftForge.EVENT_BUS.register(new CommonEventHandler());
-
-
+        MinecraftForge.EVENT_BUS.register(new ForgeEventListener());
+        MinecraftForge.EVENT_BUS.register(new ModEventListener());
+        MinecraftForge.EVENT_BUS.register(new CommonEventListener());
         // Register our mod's ForgeConfigSpec so that Forge can create and load the config file for us
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
     }
@@ -81,6 +83,10 @@ public class Lifefruit {
             LOGGER.info("HELLO FROM CLIENT SETUP");
         }
     }
+
+
+
+
 
 
 
