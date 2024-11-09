@@ -8,7 +8,10 @@ import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
 import org.slf4j.Logger;
-import top.yourzi.lifefruit.network.packet.S2C.LifeHealthPacket;
+import top.yourzi.lifefruit.network.packet.S2C.CurrentDragonHealthPacket;
+import top.yourzi.lifefruit.network.packet.S2C.CurrentLifeHealthPacket;
+import top.yourzi.lifefruit.network.packet.S2C.MaxDragonHealthPacket;
+import top.yourzi.lifefruit.network.packet.S2C.MaxLifeHealthPacket;
 
 public class Channel {
 
@@ -18,7 +21,7 @@ public class Channel {
     private static final Logger LOGGER = LogUtils.getLogger();
 
     public static final SimpleChannel INSTANCE = NetworkRegistry.newSimpleChannel(
-            new ResourceLocation("lifefruit", "life_healths"),
+            new ResourceLocation("lifefruit", "main"),
             () -> PROTOCOL_VERSION,
             PROTOCOL_VERSION::equals,
             PROTOCOL_VERSION::equals
@@ -26,10 +29,25 @@ public class Channel {
     );
 
     public static void register() {
-        INSTANCE.messageBuilder(LifeHealthPacket.class, id++, NetworkDirection.PLAY_TO_CLIENT)
-                .decoder(LifeHealthPacket::new)
-                .encoder(LifeHealthPacket::encode)
-                .consumerMainThread(LifeHealthPacket::handle)
+        INSTANCE.messageBuilder(MaxLifeHealthPacket.class, id++, NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(MaxLifeHealthPacket::new)
+                .encoder(MaxLifeHealthPacket::encode)
+                .consumerMainThread(MaxLifeHealthPacket::handle)
+                .add();
+        INSTANCE.messageBuilder(CurrentLifeHealthPacket.class, id++, NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(CurrentLifeHealthPacket::new)
+                .encoder(CurrentLifeHealthPacket::encode)
+                .consumerMainThread(CurrentLifeHealthPacket::handle)
+                .add();
+        INSTANCE.messageBuilder(MaxDragonHealthPacket.class, id++, NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(MaxDragonHealthPacket::new)
+                .encoder(MaxDragonHealthPacket::encode)
+                .consumerMainThread(MaxDragonHealthPacket::handle)
+                .add();
+        INSTANCE.messageBuilder(CurrentDragonHealthPacket.class, id++, NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(CurrentDragonHealthPacket::new)
+                .encoder(CurrentDragonHealthPacket::encode)
+                .consumerMainThread(CurrentDragonHealthPacket::handle)
                 .add();
     }
 

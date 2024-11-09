@@ -1,0 +1,16 @@
+{
+  "lifefruit.creativetab.base": "Life Fruit",
+
+  "tooltip.lifefruit.when_eat": "§9When Eaten：",
+  "tooltip.lifefruit.life_fruit": "  §aIncrease 1 life limit",
+  "tooltip.lifefruit.ender_dragon_fruit": "  §aIncrease 1 life limit",
+
+  "block.lifefruit.life_fruit_vine_crop": "Life vine",
+  "block.lifefruit.ender_dragon_fruit_crop": "Ender dragon fruit crop",
+  "block.lifefruit.life_fruit_plant": "Life fruit crop",
+
+  "item.lifefruit.life_fruit": "Life fruit",
+  "item.lifefruit.life_fruit_with_vine": "Life fruit with vines",
+  "item.lifefruit.vine": "vine",
+  "item.lifefruit.ender_dragon_fruit": "Ender dragon fruit"
+}

@@ -37,15 +37,6 @@ public class DragonFruitItem extends ItemNameBlockItem {
 
     @Override
     public ItemStack finishUsingItem(ItemStack stack, Level level, LivingEntity entity) {
-        if (entity instanceof Player) {
-            Player player = (Player) entity;
-            if (player.getPersistentData().getInt("max_dragon_health") < player.getPersistentData().getInt("max_life_health")) {
-                player.getPersistentData().putInt("max_dragon_health", player.getPersistentData().getInt("max_dragon_health") + 1);
-            }
-            player.displayClientMessage(Component.literal(("max_dragon_health" + entity.getPersistentData().getInt("max_dragon_health"))), true);
-
-
-        }
         return entity.eat(level, stack);
     }
 }
