@@ -32,22 +32,21 @@ import top.yourzi.lifefruit.register.LFCreativeTab;
 import top.yourzi.lifefruit.register.LFItems;
 import top.yourzi.lifefruit.world.LFLootAdditions;
 
-// The value here should match an entry in the META-INF/mods.toml file
+
 
 @Mod(Lifefruit.MODID)
 public class Lifefruit {
 
-    // Define mod id in a common place for everything to reference
+
     public static final String MODID = "lifefruit";
-    // Directly reference a slf4j logger
     private static final Logger LOGGER = LogUtils.getLogger();
     private static final DeferredRegister<Codec<? extends IGlobalLootModifier>> LOOT_MODIFIERS = DeferredRegister.create(ForgeRegistries.Keys.GLOBAL_LOOT_MODIFIER_SERIALIZERS, Lifefruit.MODID);
 
     public Lifefruit() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-        // Register the commonSetup method for modloading
+
         modEventBus.addListener(this::commonSetup);
-        // Register ourselves for server and other game events we are interested in
+
         MinecraftForge.EVENT_BUS.register(this);
 
         LFItems.register(modEventBus);
@@ -59,33 +58,26 @@ public class Lifefruit {
         MinecraftForge.EVENT_BUS.register(new ForgeEventListener());
         MinecraftForge.EVENT_BUS.register(new ModEventListener());
         MinecraftForge.EVENT_BUS.addGenericListener(Entity.class, this::attachedCapabilities);
-        // Register our mod's ForgeConfigSpec so that Forge can create and load the config file for us
+
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
-        // Some common setup code
+
         LOGGER.info("HELLO FROM COMMON SETUP");
 
     }
 
 
-    // You can use SubscribeEvent and let the Event Bus discover methods to call
-    @SubscribeEvent
-    public void onServerStarting(ServerStartingEvent event) {
-        // Do something when the server starts
-        LOGGER.info("HELLO from server starting");
-    }
 
-    // You can use EventBusSubscriber to automatically register all static methods in the class annotated with @SubscribeEvent
+    @SubscribeEvent
+    public void onServerStarting(ServerStartingEvent event) {}
+
+
     @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
     public static class ClientModEvents {
-
         @SubscribeEvent
-        public static void onClientSetup(FMLClientSetupEvent event) {
-            // Some client setup code
-            LOGGER.info("HELLO FROM CLIENT SETUP");
-        }
+        public static void onClientSetup(FMLClientSetupEvent event) {}
     }
 
     public void attachedCapabilities(AttachCapabilitiesEvent<Entity> event) {
