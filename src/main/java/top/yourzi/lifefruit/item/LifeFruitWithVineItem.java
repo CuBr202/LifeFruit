@@ -36,10 +36,9 @@ public class LifeFruitWithVineItem extends Item {
             }
         } else {
             level.playSound(player, blockpos, SoundEvents.SHEEP_SHEAR, SoundSource.PLAYERS, 1.0F, 0.8F + level.random.nextFloat() * 0.4F);
-            if (itemInOtherHand.hurt(1, RandomSource.create(), null) || !player.isCreative()) {
-                itemInOtherHand.shrink(1);
-                itemInOtherHand.setDamageValue(0);
+            if (!player.isCreative()) {
                 itemstack.shrink(1);
+                itemInOtherHand.hurt(1, RandomSource.create(), null);
             }
 
             Random random = new Random();

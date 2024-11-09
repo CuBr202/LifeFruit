@@ -3,6 +3,7 @@ package top.yourzi.lifefruit;
 import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Codec;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
@@ -20,6 +21,12 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.slf4j.Logger;
+import top.yourzi.lifefruit.capability.DragonHeart.CurrentDragonHeartCapabilityProvider;
+import top.yourzi.lifefruit.capability.DragonHeart.MaxDragonHeartCapabilityProvider;
+import top.yourzi.lifefruit.capability.LifeHeart.CurrentLifeHealthCapability;
+import top.yourzi.lifefruit.capability.LifeHeart.CurrentLifeHealthCapabilityProvider;
+import top.yourzi.lifefruit.capability.LifeHeart.MaxLifeHeartCapability;
+import top.yourzi.lifefruit.capability.LifeHeart.MaxLifeHeartCapabilityProvider;
 import top.yourzi.lifefruit.event.CommonEventListener;
 import top.yourzi.lifefruit.event.ForgeEventListener;
 import top.yourzi.lifefruit.event.ModEventListener;
@@ -55,6 +62,7 @@ public class Lifefruit {
         MinecraftForge.EVENT_BUS.register(new ForgeEventListener());
         MinecraftForge.EVENT_BUS.register(new ModEventListener());
         MinecraftForge.EVENT_BUS.register(new CommonEventListener());
+        MinecraftForge.EVENT_BUS.addGenericListener(Entity.class, this::attachedCapabilities);
         // Register our mod's ForgeConfigSpec so that Forge can create and load the config file for us
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
     }
@@ -84,10 +92,22 @@ public class Lifefruit {
         }
     }
 
-
-
-
-
+    public void attachedCapabilities(AttachCapabilitiesEvent<Entity> event) {
+        if (event.getObject() instanceof Player player) {
+            if (!player.getCapability(MaxLifeHeartCapabilityProvider.MAX_LIFE_HEART_CAPABILITY).isPresent()){
+                    event.addCapability(new ResourceLocation(MODID, "max_life_heart"), new MaxLifeHeartCapabilityProvider());
+            }
+            if (!player.getCapability(CurrentLifeHealthCapabilityProvider.CURRENT_LIFE_HEALTH_CAPABILITY).isPresent()){
+                  event.addCapability(new ResourceLocation(MODID, "current_life_heart"), new CurrentLifeHealthCapabilityProvider());
+            }
+            if (!player.getCapability(MaxDragonHeartCapabilityProvider.MAX_DRAGON_HEART_CAPABILITY).isPresent()){
+                event.addCapability(new ResourceLocation(MODID, "max_dragon_heart"), new MaxDragonHeartCapabilityProvider());
+            }
+            if (!player.getCapability(CurrentDragonHeartCapabilityProvider.CURRENT_DRAGON_HEART_CAPABILITY).isPresent()){
+                event.addCapability(new ResourceLocation(MODID, "current_dragon_heart"), new CurrentDragonHeartCapabilityProvider());
+            }
+        }
+    }
 
 
 }

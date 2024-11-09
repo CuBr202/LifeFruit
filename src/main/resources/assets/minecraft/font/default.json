@@ -1,0 +1,22 @@
+{
+  "providers": [
+    {
+      "type": "bitmap",
+      "file": "lifefruit:gui/life_health.png",
+      "ascent": 9,
+      "height":11,
+      "chars": [
+        "\ue0b1"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "lifefruit:gui/dragon_health.png",
+      "ascent": 9,
+      "height":11,
+      "chars": [
+        "\ue0b2"
+      ]
+    }
+  ]
+}

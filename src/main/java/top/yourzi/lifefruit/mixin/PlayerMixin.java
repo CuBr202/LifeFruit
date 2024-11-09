@@ -18,6 +18,13 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import top.yourzi.lifefruit.capability.DragonHeart.CurrentDragonHeartCapabilityProvider;
+import top.yourzi.lifefruit.capability.DragonHeart.MaxDragonHeartCapabilityProvider;
+import top.yourzi.lifefruit.capability.LifeHeart.CurrentLifeHealthCapabilityProvider;
+import top.yourzi.lifefruit.capability.LifeHeart.MaxLifeHeartCapabilityProvider;
+import top.yourzi.lifefruit.network.Channel;
+import top.yourzi.lifefruit.network.packet.S2C.CurrentLifeHealthPacket;
+import top.yourzi.lifefruit.network.packet.S2C.MaxLifeHealthPacket;
 
 @Mixin(Player.class)
 public abstract class PlayerMixin extends LivingEntity{
@@ -25,73 +32,99 @@ public abstract class PlayerMixin extends LivingEntity{
 
     @Shadow @Final private static Logger LOGGER;
 
+    @Shadow public abstract boolean hurt(DamageSource p_36154_, float p_36155_);
+
     protected PlayerMixin(EntityType<? extends LivingEntity> p_20966_, Level p_20967_) {
         super(p_20966_, p_20967_);
     }
 
     @Inject(method = "aiStep", at = @At(value = "HEAD"))
     public void aiStep(CallbackInfo ci) {
-        int lifeHealth = this.getPersistentData().getInt("present_life_health");
-        int maxlifeHealth = this.getPersistentData().getInt("max_life_health");
-        int dragonHealth = this.getPersistentData().getInt("present_dragon_health");
-        int maxdragonHealth = this.getPersistentData().getInt("max_dragon_health");
         int exhaustion = (int) this.getFoodData().getExhaustionLevel();
 
-        if (this.level().getGameRules().getBoolean(GameRules.RULE_NATURAL_REGENERATION) && this.getHealth() >= this.getMaxHealth()) {
-            if (lifeHealth < maxlifeHealth && this.tickCount % 20 == 0) {
-                this.getPersistentData().putInt("present_life_health", lifeHealth + 1);
-                this.getFoodData().setExhaustion(exhaustion + 6);
-            }
-            if (dragonHealth < maxdragonHealth && this.tickCount % 20 == 0 && lifeHealth >= maxlifeHealth) {
-                this.getPersistentData().putInt("present_dragon_health", dragonHealth + 1);
-                this.getFoodData().setExhaustion(exhaustion + 6);
+        if (this.level().getGameRules().getBoolean(GameRules.RULE_NATURAL_REGENERATION) && this.getHealth() >= this.getMaxHealth() && !this.getFoodData().needsFood()) {
+            if (this.tickCount % 20 == 0) {
+
+                this.getCapability(CurrentLifeHealthCapabilityProvider.CURRENT_LIFE_HEALTH_CAPABILITY).ifPresent((heart) -> {
+                    this.getCapability(MaxLifeHeartCapabilityProvider.MAX_LIFE_HEART_CAPABILITY).ifPresent((maxheart) -> {
+
+                        if (heart.getCurrentLifeHeart() < maxheart.getMaxLifeHeart()){
+                            heart.increaseCurrentLifeHeart(maxheart.getMaxLifeHeart());
+                            this.getFoodData().setExhaustion(exhaustion + 6);
+                        } else if (heart.getCurrentLifeHeart() >= maxheart.getMaxLifeHeart()) {
+                            this.getCapability(CurrentDragonHeartCapabilityProvider.CURRENT_DRAGON_HEART_CAPABILITY).ifPresent((dragonheart) -> {
+                                this.getCapability(MaxDragonHeartCapabilityProvider.MAX_DRAGON_HEART_CAPABILITY).ifPresent((maxdragonheart) -> {
+
+                                    if (dragonheart.getCurrentDragonHeart() < maxdragonheart.getMaxDragonHeart()){
+                                        dragonheart.increaseMaxDragonHeart(maxdragonheart.getMaxDragonHeart());
+
+                                        this.getFoodData().setExhaustion(exhaustion + 6);
+
+                                    }
+                                });
+                            });
+                        }
+                    });
+                });
             }
         }
     }
 
 
     @Inject(method = "actuallyHurt", at = @At(value = "HEAD"), cancellable = true)
-    protected void actuallyHurt(DamageSource source, float damage, CallbackInfo ci){
-        int lifeHealth = this.getPersistentData().getInt("present_life_health");
-        int dragonHealth = this.getPersistentData().getInt("present_dragon_health");
-        damage = this.getDamageAfterArmorAbsorb(source, damage);
-        damage = this.getDamageAfterMagicAbsorb(source, damage);
-        damage = ForgeHooks.onLivingHurt(this, source, damage);
-        float f1 = Math.max(damage - this.getAbsorptionAmount(), 0.0F);
-        this.setAbsorptionAmount(this.getAbsorptionAmount() - (damage - f1));
-        this.getCombatTracker().recordDamage(source, f1);
+    protected void actuallyHurt(DamageSource source, float damage, CallbackInfo ci) {
+        this.getCapability(CurrentLifeHealthCapabilityProvider.CURRENT_LIFE_HEALTH_CAPABILITY).ifPresent((heart) -> {
+            this.getCapability(CurrentDragonHeartCapabilityProvider.CURRENT_DRAGON_HEART_CAPABILITY).ifPresent((dragonheart) -> {
 
-        if (dragonHealth > 0 && lifeHealth > 0 && !this.isInvulnerableTo(source)){
-            dragonHealth = (int) (dragonHealth - f1);
-            if (dragonHealth >= 0) {
-                this.getPersistentData().putInt("present_dragon_health", dragonHealth);
-            }else {
-                lifeHealth = lifeHealth - dragonHealth;
-                if (lifeHealth > 0) {
-                    this.getPersistentData().putInt("present_life_health", lifeHealth);
-                } else if (lifeHealth <= 0) {
-                    this.getPersistentData().putInt("present_life_health", 0);
-                    f1 = f1 - dragonHealth - lifeHealth;
-                    this.setHealth(this.getHealth() - f1);
-                    LOGGER.info("present_life_health" + this.getPersistentData().getInt("present_life_health"));
+                if (!this.isInvulnerableTo(source) && dragonheart.getCurrentDragonHeart() > 0 && damage > 0) {
+
+                    float hurt = ForgeHooks.onLivingHurt(this, source, damage);
+                    hurt = this.getDamageAfterArmorAbsorb(source, hurt);
+                    hurt = this.getDamageAfterMagicAbsorb(source, hurt);
+                    hurt = ForgeHooks.onLivingDamage(this, source, hurt);
+
+                    if (dragonheart.getCurrentDragonHeart() > hurt) {
+                        dragonheart.setCurrentDragonHeart((int) (dragonheart.getCurrentDragonHeart() - hurt));
+                    }else if (dragonheart.getCurrentDragonHeart() <= hurt) {
+                        hurt = hurt - dragonheart.getCurrentDragonHeart();
+                        dragonheart.setCurrentDragonHeart(0);
+                        heart.setCurrentLifeHeart((int) (heart.getCurrentLifeHeart() - hurt));
+                    } else if (heart.getCurrentLifeHeart() + dragonheart.getCurrentDragonHeart() <= hurt) {
+                        dragonheart.setCurrentDragonHeart(0);
+                        heart.setCurrentLifeHeart(0);
+
+                        this.getCapability(MaxDragonHeartCapabilityProvider.MAX_DRAGON_HEART_CAPABILITY).ifPresent((maxheart) -> {
+                            this.getCapability(MaxLifeHeartCapabilityProvider.MAX_LIFE_HEART_CAPABILITY).ifPresent((maxdragonheart) -> {
+                                this.setHealth(this.getHealth() - maxdragonheart.getMaxLifeHeart() - maxheart.getMaxDragonHeart());
+                            });
+                        });
+
+                    }
+                    this.gameEvent(GameEvent.ENTITY_DAMAGE);
+                    ci.cancel();
                 }
-                this.getPersistentData().putInt("present_life_health", 0);
-            }
-            this.getCombatTracker().recordDamage(source, f1);
-            ci.cancel();
-        }else if (lifeHealth > 0 )
-        {
-            lifeHealth = (int) (lifeHealth - f1);
-            if (lifeHealth >= 0) {
-                this.getPersistentData().putInt("present_life_health", lifeHealth);
-            }else {
-                this.setHealth(this.getHealth() - f1);
-                this.getPersistentData().putInt("present_life_health", 0);
-            }
-            this.getCombatTracker().recordDamage(source, f1);
-            this.gameEvent(GameEvent.ENTITY_DAMAGE);
-            ci.cancel();
-        }
+
+                if (!this.isInvulnerableTo(source) && heart.getCurrentLifeHeart() > 0 && damage > 0 && dragonheart.getCurrentDragonHeart() <= 0) {
+
+                    float hurt = ForgeHooks.onLivingHurt(this, source, damage);
+                    hurt = this.getDamageAfterArmorAbsorb(source, hurt);
+                    hurt = this.getDamageAfterMagicAbsorb(source, hurt);
+                    hurt = ForgeHooks.onLivingDamage(this, source, hurt);
+
+                    if (heart.getCurrentLifeHeart() > hurt) {
+                        heart.setCurrentLifeHeart((int) (heart.getCurrentLifeHeart() - hurt));
+                    }else{
+                        hurt = hurt - heart.getCurrentLifeHeart();
+                        heart.setCurrentLifeHeart(0);
+                        this.setHealth(this.getHealth() - hurt);
+                    }
+                    this.gameEvent(GameEvent.ENTITY_DAMAGE);
+                    ci.cancel();
+                }
+
+
+            });
+            });
     }
 
 }
