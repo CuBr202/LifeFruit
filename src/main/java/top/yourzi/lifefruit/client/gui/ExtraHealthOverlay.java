@@ -69,7 +69,7 @@ public class ExtraHealthOverlay {
                 guiGraphics.blit(LIFE_HEALTH_HALF,x + ((lifeHearts + halfLifeHearts - 1) % 10 * 8),y - (((lifehealth - 1) / 20) * 9),90,0,0,8,8,
                             8,8) ;
                 for(int i = 0; i < lifeHearts; i++) {
-                        guiGraphics.blit(LIFE_HEALTH,x + (i * 8),y - (((lifehealth - 1 )/ 20) * 9),90,0,0,8,8,
+                        guiGraphics.blit(LIFE_HEALTH,x + (i % 10 * 8),y - (((i)/ 10) * 9),90,0,0,8,8,
                                 8,8) ;
                 }
             }
@@ -79,7 +79,7 @@ public class ExtraHealthOverlay {
                 guiGraphics.blit(DRAGON_HEALTH_HALF, x + ((dragonHearts + halfDragonHearts - 1) % 10 * 8), y - (((dragonhealth - 1) / 20) * 9), 90, 0, 0, 8, 8,
                         8, 8);
                 for (int i = 0; i < dragonHearts; i++) {
-                    guiGraphics.blit(DRAGON_HEALTH, x + (i * 8), y - (((dragonhealth - 1) / 20) * 9), 90, 0, 0, 8, 8,
+                    guiGraphics.blit(DRAGON_HEALTH, x + (i % 10 * 8), y - (((i) / 10) * 9), 90, 0, 0, 8, 8,
                             8, 8);
 
                 }
