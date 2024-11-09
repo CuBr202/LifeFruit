@@ -23,11 +23,8 @@ import net.minecraftforge.registries.ForgeRegistries;
 import org.slf4j.Logger;
 import top.yourzi.lifefruit.capability.DragonHeart.CurrentDragonHeartCapabilityProvider;
 import top.yourzi.lifefruit.capability.DragonHeart.MaxDragonHeartCapabilityProvider;
-import top.yourzi.lifefruit.capability.LifeHeart.CurrentLifeHealthCapability;
 import top.yourzi.lifefruit.capability.LifeHeart.CurrentLifeHealthCapabilityProvider;
-import top.yourzi.lifefruit.capability.LifeHeart.MaxLifeHeartCapability;
 import top.yourzi.lifefruit.capability.LifeHeart.MaxLifeHeartCapabilityProvider;
-import top.yourzi.lifefruit.event.CommonEventListener;
 import top.yourzi.lifefruit.event.ForgeEventListener;
 import top.yourzi.lifefruit.event.ModEventListener;
 import top.yourzi.lifefruit.register.LFBlocks;
@@ -61,7 +58,6 @@ public class Lifefruit {
 
         MinecraftForge.EVENT_BUS.register(new ForgeEventListener());
         MinecraftForge.EVENT_BUS.register(new ModEventListener());
-        MinecraftForge.EVENT_BUS.register(new CommonEventListener());
         MinecraftForge.EVENT_BUS.addGenericListener(Entity.class, this::attachedCapabilities);
         // Register our mod's ForgeConfigSpec so that Forge can create and load the config file for us
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);

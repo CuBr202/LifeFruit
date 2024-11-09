@@ -22,9 +22,6 @@ import top.yourzi.lifefruit.capability.DragonHeart.CurrentDragonHeartCapabilityP
 import top.yourzi.lifefruit.capability.DragonHeart.MaxDragonHeartCapabilityProvider;
 import top.yourzi.lifefruit.capability.LifeHeart.CurrentLifeHealthCapabilityProvider;
 import top.yourzi.lifefruit.capability.LifeHeart.MaxLifeHeartCapabilityProvider;
-import top.yourzi.lifefruit.network.Channel;
-import top.yourzi.lifefruit.network.packet.S2C.CurrentLifeHealthPacket;
-import top.yourzi.lifefruit.network.packet.S2C.MaxLifeHealthPacket;
 
 @Mixin(Player.class)
 public abstract class PlayerMixin extends LivingEntity{

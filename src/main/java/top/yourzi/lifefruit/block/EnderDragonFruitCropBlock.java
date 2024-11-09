@@ -59,7 +59,6 @@ public class EnderDragonFruitCropBlock extends CropBlock {
             if (!player.isCreative()) {
                 itemstack.shrink(1);
             }
-            //LogUtils.getLogger().info("onUse Growth time: " + getGrowthTime(state));
             return InteractionResult.SUCCESS;
         }
 
@@ -111,7 +110,6 @@ public class EnderDragonFruitCropBlock extends CropBlock {
         {
             level.setBlock(pos, this.getStateForGrowth(time - 1, age), 2);
         }
-        //LogUtils.getLogger().info("Growth time: " + time);
 
     }
 

@@ -44,18 +44,6 @@ public class ForgeEventListener {
     }
 
     @SubscribeEvent
-    public static void onPlayerDamage(LivingDamageEvent event) {
-        if (event.getEntity() instanceof Player player) {
-            player.getCapability(CurrentLifeHealthCapabilityProvider.CURRENT_LIFE_HEALTH_CAPABILITY).ifPresent((heart) ->
-                    {Channel.sendToPlayer(new CurrentLifeHealthPacket(heart.getCurrentLifeHeart()), (ServerPlayer) player);}
-            );
-            player.getCapability(CurrentDragonHeartCapabilityProvider.CURRENT_DRAGON_HEART_CAPABILITY).ifPresent((heart) ->
-                    {Channel.sendToPlayer(new CurrentDragonHealthPacket(heart.getCurrentDragonHeart()), (ServerPlayer) player);}
-            );
-        }
-    }
-
-    @SubscribeEvent
     public static void onPlayerTick(LivingEvent.LivingTickEvent event) {
 
         if (event.getEntity() instanceof ServerPlayer player){
