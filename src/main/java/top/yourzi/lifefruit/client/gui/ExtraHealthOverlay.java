@@ -58,73 +58,32 @@ public class ExtraHealthOverlay {
         if (player == null || gui.getMinecraft().options.hideGui || !gui.shouldDrawSurvivalElements()) {return;}
 
 
-            int lifeHearts = CurrentLifeHealthCapabilityProvider.clientCurrentLifeHeart / 2 ;
-            int halfLifeHearts = CurrentLifeHealthCapabilityProvider.clientCurrentLifeHeart % 2;
-            int dragonHearts = CurrentDragonHeartCapabilityProvider.clientCurrentDragonHeart / 2 ;
-            int halfDragonHearts = CurrentDragonHeartCapabilityProvider.clientCurrentDragonHeart  % 2;
+            int lifehealth = CurrentLifeHealthCapabilityProvider.clientCurrentLifeHeart;
+            int dragonhealth = CurrentDragonHeartCapabilityProvider.clientCurrentDragonHeart;
+            int lifeHearts = lifehealth / 2 ;
+            int halfLifeHearts = lifehealth % 2;
+            int dragonHearts = dragonhealth / 2 ;
+            int halfDragonHearts = dragonhealth % 2;
 
-            if (CurrentLifeHealthCapabilityProvider.clientCurrentLifeHeart > 0){
-
-
-                if (CurrentLifeHealthCapabilityProvider.clientCurrentLifeHeart <= 20){
-                    guiGraphics.blit(LIFE_HEALTH_HALF,x + ((lifeHearts + halfLifeHearts - 1) * 8),y,90,0,0,8,8,
+            if (lifehealth > 0){
+                guiGraphics.blit(LIFE_HEALTH_HALF,x + ((lifeHearts + halfLifeHearts - 1) % 10 * 8),y - (((lifehealth - 1) / 20) * 9),90,0,0,8,8,
                             8,8) ;
-                    for(int i = 0; i < lifeHearts; i++) {
-                        guiGraphics.blit(LIFE_HEALTH,x + (i * 8),y,90,0,0,8,8,
+                for(int i = 0; i < lifeHearts; i++) {
+                        guiGraphics.blit(LIFE_HEALTH,x + (i * 8),y - (((lifehealth - 1 )/ 20) * 9),90,0,0,8,8,
                                 8,8) ;
-
-                    }
-
-                }else{
-                    guiGraphics.blit(LIFE_HEALTH_HALF,x + ((lifeHearts + halfLifeHearts - 11) * 8),y - 9,90,0,0,8,8,
-                            8,8) ;
-                    for(int i = 0; i < 10; i++) {
-                        guiGraphics.blit(LIFE_HEALTH,x + (i * 8),y,90,0,0,8,8,
-                                8,8) ;
-
-                    }
-                    for(int i = 0; i < lifeHearts - 10; i++) {
-                        guiGraphics.blit(LIFE_HEALTH,x + (i * 8),y - 9,90,0,0,8,8,
-                                8,8) ;
-
-                    }
-
                 }
-
             }
 
 
-            if (CurrentDragonHeartCapabilityProvider.clientCurrentDragonHeart > 0){
-
-                if (CurrentDragonHeartCapabilityProvider.clientCurrentDragonHeart <= 20){
-                    guiGraphics.blit(DRAGON_HEALTH_HALF,x + ((dragonHearts + halfDragonHearts - 1) * 8),y,90,0,0,8,8,
-                            8,8) ;
-                    for(int i = 0; i < dragonHearts; i++) {
-                        guiGraphics.blit(DRAGON_HEALTH,x + (i * 8),y,90,0,0,8,8,
-                                8,8) ;
-
-                    }
-
-
-                }else{
-                    guiGraphics.blit(DRAGON_HEALTH_HALF,x + ((dragonHearts + halfDragonHearts - 11) * 8),y - 9,90,0,0,8,8,
-                            8,8) ;
-                    for(int i = 0; i < 10; i++) {
-                        guiGraphics.blit(DRAGON_HEALTH,x + (i * 8),y,90,0,0,8,8,
-                                8,8) ;
-
-                    }
-                    for(int i = 0; i < dragonHearts - 10; i++) {
-                        guiGraphics.blit(DRAGON_HEALTH,x + (i * 8),y - 9,90,0,0,8,8,
-                                8,8) ;
-
-                    }
-
+            if (dragonhealth > 0) {
+                guiGraphics.blit(DRAGON_HEALTH_HALF, x + ((dragonHearts + halfDragonHearts - 1) % 10 * 8), y - (((dragonhealth - 1) / 20) * 9), 90, 0, 0, 8, 8,
+                        8, 8);
+                for (int i = 0; i < dragonHearts; i++) {
+                    guiGraphics.blit(DRAGON_HEALTH, x + (i * 8), y - (((dragonhealth - 1) / 20) * 9), 90, 0, 0, 8, 8,
+                            8, 8);
 
                 }
-
             }
-
 
     };
 
