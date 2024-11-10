@@ -42,12 +42,14 @@ public class LifeFruitVineCropBlock extends CropBlock {
             Block.box(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D)
     };
 
+
+
     public LifeFruitVineCropBlock(Properties properties) {
         super(BlockBehaviour.Properties.of()
                 .noOcclusion()
                 .noCollission()
                 .sound(SoundType.CROP)
-                //.lightLevel(state -> (LifeFruitVineCropBlock.AGE == 2) ? 14 : 0)
+                .lightLevel(state -> ((Integer)state.getValue(AGE) == 2) ? 14 : 0)
         );
     }
 
