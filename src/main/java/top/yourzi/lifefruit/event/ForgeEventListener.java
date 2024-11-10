@@ -145,29 +145,29 @@ public class ForgeEventListener {
         event.getOriginal().reviveCaps();
         event.getOriginal().getCapability(MaxLifeHeartCapabilityProvider.MAX_LIFE_HEART_CAPABILITY).ifPresent((old) ->
                 event.getEntity().getCapability(MaxLifeHeartCapabilityProvider.MAX_LIFE_HEART_CAPABILITY).ifPresent((heart) -> {
-                            Channel.sendToPlayer(new MaxLifeHealthPacket(heart.getMaxLifeHeart()), (ServerPlayer) event.getEntity());
+
                             heart.setMaxLifeHeart(old.getMaxLifeHeart());
                         }
                 )
         );
-        event.getOriginal().getCapability(CurrentLifeHealthCapabilityProvider.CURRENT_LIFE_HEALTH_CAPABILITY).ifPresent((old) ->
+        event.getOriginal().getCapability(MaxLifeHeartCapabilityProvider.MAX_LIFE_HEART_CAPABILITY).ifPresent((old) ->
                 event.getEntity().getCapability(CurrentLifeHealthCapabilityProvider.CURRENT_LIFE_HEALTH_CAPABILITY).ifPresent((heart) -> {
-                            Channel.sendToPlayer(new CurrentLifeHealthPacket(heart.getCurrentLifeHeart()), (ServerPlayer) event.getEntity());
-                            heart.setCurrentLifeHeart(old.getCurrentLifeHeart());
+
+                            heart.setCurrentLifeHeart(old.getMaxLifeHeart());
                         }
                 )
         );
         event.getOriginal().getCapability(MaxDragonHeartCapabilityProvider.MAX_DRAGON_HEART_CAPABILITY).ifPresent((old) ->
                 event.getEntity().getCapability(MaxDragonHeartCapabilityProvider.MAX_DRAGON_HEART_CAPABILITY).ifPresent((heart) -> {
-                            Channel.sendToPlayer(new MaxDragonHealthPacket(heart.getMaxDragonHeart()), (ServerPlayer) event.getEntity());
+
                             heart.setMaxDragonHeart(old.getMaxDragonHeart());
                         }
                 )
         );
-        event.getOriginal().getCapability(CurrentDragonHeartCapabilityProvider.CURRENT_DRAGON_HEART_CAPABILITY).ifPresent((old) ->
+        event.getOriginal().getCapability(MaxDragonHeartCapabilityProvider.MAX_DRAGON_HEART_CAPABILITY).ifPresent((old) ->
                 event.getEntity().getCapability(CurrentDragonHeartCapabilityProvider.CURRENT_DRAGON_HEART_CAPABILITY).ifPresent((heart) -> {
-                            Channel.sendToPlayer(new CurrentDragonHealthPacket(heart.getCurrentDragonHeart()), (ServerPlayer) event.getEntity());
-                            heart.setCurrentDragonHeart(old.getCurrentDragonHeart());
+
+                            heart.setCurrentDragonHeart(old.getMaxDragonHeart());
                         }
                 )
         );

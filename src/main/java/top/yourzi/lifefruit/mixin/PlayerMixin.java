@@ -82,27 +82,21 @@ public abstract class PlayerMixin extends LivingEntity{
 
                     if (dragonheart.getCurrentDragonHeart() > hurt) {
                         dragonheart.setCurrentDragonHeart((int) (dragonheart.getCurrentDragonHeart() - hurt));
-                    }else if (dragonheart.getCurrentDragonHeart() <= hurt) {
+                    }else if (dragonheart.getCurrentDragonHeart() <= hurt && (heart.getCurrentLifeHeart() + dragonheart.getCurrentDragonHeart()) > hurt) {
                         hurt = hurt - dragonheart.getCurrentDragonHeart();
+                        LOGGER.info("hurt: " + hurt + "lifeheart: " + heart.getCurrentLifeHeart());
                         dragonheart.setCurrentDragonHeart(0);
                         heart.setCurrentLifeHeart((int) (heart.getCurrentLifeHeart() - hurt));
-                    } else if (heart.getCurrentLifeHeart() + dragonheart.getCurrentDragonHeart() <= hurt) {
+                        LOGGER.info("hurt: " + hurt + "lifeheart: " + heart.getCurrentLifeHeart());
+                    } else if ((heart.getCurrentLifeHeart() + dragonheart.getCurrentDragonHeart()) <= hurt) {
                         dragonheart.setCurrentDragonHeart(0);
                         heart.setCurrentLifeHeart(0);
-
-                        this.getCapability(MaxDragonHeartCapabilityProvider.MAX_DRAGON_HEART_CAPABILITY).ifPresent((maxheart) -> {
-                            this.getCapability(MaxLifeHeartCapabilityProvider.MAX_LIFE_HEART_CAPABILITY).ifPresent((maxdragonheart) -> {
-                                this.setHealth(this.getHealth() - maxdragonheart.getMaxLifeHeart() - maxheart.getMaxDragonHeart());
-                            });
-                        });
-
+                        hurt = hurt - (heart.getCurrentLifeHeart() + dragonheart.getCurrentDragonHeart());
+                        this.setHealth(this.getHealth() - hurt);
                     }
                     this.gameEvent(GameEvent.ENTITY_DAMAGE);
                     ci.cancel();
-                }
-
-                if (!this.isInvulnerableTo(source) && heart.getCurrentLifeHeart() > 0 && damage > 0 && dragonheart.getCurrentDragonHeart() <= 0) {
-
+                } else if (!this.isInvulnerableTo(source) && heart.getCurrentLifeHeart() > 0 && damage > 0 && dragonheart.getCurrentDragonHeart() <= 0) {
                     float hurt = ForgeHooks.onLivingHurt(this, source, damage);
                     hurt = this.getDamageAfterArmorAbsorb(source, hurt);
                     hurt = this.getDamageAfterMagicAbsorb(source, hurt);
@@ -118,6 +112,9 @@ public abstract class PlayerMixin extends LivingEntity{
                     this.gameEvent(GameEvent.ENTITY_DAMAGE);
                     ci.cancel();
                 }
+
+
+
 
 
             });
