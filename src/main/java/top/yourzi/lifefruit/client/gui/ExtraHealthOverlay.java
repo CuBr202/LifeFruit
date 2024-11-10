@@ -93,14 +93,14 @@ public class ExtraHealthOverlay {
         int shake = -1;
         int offy = 0;
 
-        if (player.getEffect(MobEffects.HEALTH_BOOST).getAmplifier() <= 35){
+
+
+        if (player.hasEffect(MobEffects.HEALTH_BOOST) && player.getEffect(MobEffects.HEALTH_BOOST).getAmplifier() <= 35){
             offy = player.getEffect(MobEffects.HEALTH_BOOST).getAmplifier() / 5 - 1;
         }else {
             offy = 6;
         }
-
-
-        if ( player.hasEffect(MobEffects.REGENERATION) ) {
+        if (player.hasEffect(MobEffects.REGENERATION) ) {
             shake = gui.getGuiTicks() % Mth.ceil( player.getMaxHealth() + 5.0F );
         }
 
