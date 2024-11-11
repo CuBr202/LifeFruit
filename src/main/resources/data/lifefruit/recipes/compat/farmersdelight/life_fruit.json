@@ -1,0 +1,27 @@
+{
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "farmersdelight"
+    }
+  ],
+  "type": "farmersdelight:cutting",
+  "ingredients": [
+    {
+      "item": "lifefruit:life_fruit_with_vine"
+    }
+  ],
+  "result": [
+    {
+      "item": "lifefruit:life_fruit"
+    },
+    {
+      "item": "lifefruit:vine",
+      "chance": 0.25
+    }
+  ],
+  "tool": {
+    "tag": "forge:shears"
+  },
+  "sound": "minecraft:entity.sheep.shear"
+}
