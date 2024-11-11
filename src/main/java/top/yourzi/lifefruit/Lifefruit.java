@@ -5,6 +5,7 @@ import com.mojang.serialization.Codec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.ComposterBlock;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.loot.IGlobalLootModifier;
@@ -58,14 +59,27 @@ public class Lifefruit {
         MinecraftForge.EVENT_BUS.register(new ForgeEventListener());
         MinecraftForge.EVENT_BUS.register(new ModEventListener());
         MinecraftForge.EVENT_BUS.addGenericListener(Entity.class, this::attachedCapabilities);
+        modEventBus.addListener(this::init);
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
     }
 
+
     private void commonSetup(final FMLCommonSetupEvent event) {
-
         LOGGER.info("HELLO FROM COMMON SETUP");
+    }
 
+    public void init(final FMLCommonSetupEvent event) {
+        event.enqueueWork(() -> {
+            registerCompostables();
+        });}
+
+    public static void registerCompostables() {
+        ComposterBlock.COMPOSTABLES.put(LFItems.DRAGON_FRUIT.get(), 0.5F);
+        ComposterBlock.COMPOSTABLES.put(LFItems.LIFE_FRUIT.get(), 0.5F);
+        ComposterBlock.COMPOSTABLES.put(LFItems.VINE.get(), 0.3F);
+        ComposterBlock.COMPOSTABLES.put(LFItems.LIFE_FRUIT_WITH_VINE.get(), 0.6F);
+        ComposterBlock.COMPOSTABLES.put(LFBlocks.LIFE_FRUIT_PLANT.get(), 0.6F);
     }
 
 

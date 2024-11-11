@@ -1,6 +1,7 @@
 package top.yourzi.lifefruit.item;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
@@ -10,15 +11,27 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.items.ItemHandlerHelper;
 import top.yourzi.lifefruit.register.LFItems;
 
+import javax.annotation.Nullable;
+import java.util.List;
 import java.util.Random;
 
 public class LifeFruitWithVineItem extends Item {
     public LifeFruitWithVineItem(Properties properties) {
         super(properties);
+    }
+
+
+    @Override
+    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> pTooltipComponents, TooltipFlag flagIn) {
+
+        pTooltipComponents.add(Component.translatable("tooltip.lifefruit.life_fruit_with_vine"));
+
+        super.appendHoverText(stack,worldIn, pTooltipComponents, flagIn);
     }
 
     @Override

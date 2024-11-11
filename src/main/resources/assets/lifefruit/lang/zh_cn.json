@@ -3,6 +3,7 @@
 
   "tooltip.lifefruit.when_eat": "§9当食用时：",
   "tooltip.lifefruit.life_fruit": "  §6 +1§r\uE0B1",
+  "tooltip.lifefruit.life_fruit_with_vine": "  §7双手同时手持它和剪刀使用来修剪",
   "tooltip.lifefruit.ender_dragon_fruit": "  §5 +1§r\uE0B2",
 
   "block.lifefruit.life_fruit_vine_crop": "生命藤",
