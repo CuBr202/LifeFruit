@@ -61,15 +61,14 @@ public class Lifefruit {
         MinecraftForge.EVENT_BUS.register(new ForgeEventListener());
         MinecraftForge.EVENT_BUS.register(new ModEventListener());
         MinecraftForge.EVENT_BUS.addGenericListener(Entity.class, this::attachedCapabilities);
+
         modEventBus.addListener(this::init);
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
     }
 
 
-    private void commonSetup(final FMLCommonSetupEvent event) {
-        LOGGER.info("HELLO FROM COMMON SETUP");
-    }
+    private void commonSetup(final FMLCommonSetupEvent event) {}
 
     public void init(final FMLCommonSetupEvent event) {
         event.enqueueWork(() -> {
