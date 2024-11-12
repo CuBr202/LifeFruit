@@ -2,9 +2,17 @@
   "lifefruit.creativetab.base": "Life Fruit",
 
   "tooltip.lifefruit.when_eat": "§9When Eaten：",
-  "tooltip.lifefruit.life_fruit": "  §6 +1§r\uE0B1",
-  "tooltip.lifefruit.life_fruit_with_vine": "  §7Use shears in another hand to trim it",
-  "tooltip.lifefruit.ender_dragon_fruit": "  §5 +1§r\uE0B2",
+  "tooltip.lifefruit.pressed_shift": "§Press §f[shift]§8 to view the information",
+  "tooltip.lifefruit.press_shift": "§Press §7[shift]§8 to view the information",
+
+  "tooltip.lifefruit.life_fruit": "   §6+§r\uE0B1",
+  "tooltip.lifefruit.life_fruit_with_vine": "§2Use shears in another hand to",
+  "tooltip.lifefruit.life_fruit_with_vine_1": "§2trim it into Life Fruit",
+  "tooltip.lifefruit.ender_dragon_fruit": "   §5+§r\uE0B2",
+  "tooltip.lifefruit.ender_dragon_fruit_1": "§5Can only be planted on Obsidian in the End",
+  "tooltip.lifefruit.ender_dragon_fruit_2": "§5Only grows for about 20 minutes after pouring Dragon's Breath",
+  "tooltip.lifefruit.vine_1": "§2Can only be planted on Moss Block",
+  "tooltip.lifefruit.vine_2": "§2Only grows in the Lush Caves",
 
   "block.lifefruit.life_fruit_vine_crop": "Life vine",
   "block.lifefruit.ender_dragon_fruit_crop": "Ender dragon fruit crop",

@@ -1,5 +1,6 @@
 package top.yourzi.lifefruit.item;
 
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
@@ -29,7 +30,13 @@ public class LifeFruitWithVineItem extends Item {
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> pTooltipComponents, TooltipFlag flagIn) {
 
-        pTooltipComponents.add(Component.translatable("tooltip.lifefruit.life_fruit_with_vine"));
+        if (Screen.hasShiftDown()) {
+            pTooltipComponents.add(Component.translatable("tooltip.lifefruit.pressed_shift"));
+            pTooltipComponents.add(Component.translatable("tooltip.lifefruit.life_fruit_with_vine"));
+            pTooltipComponents.add(Component.translatable("tooltip.lifefruit.life_fruit_with_vine_1"));
+        }else {
+            pTooltipComponents.add(Component.translatable("tooltip.lifefruit.press_shift"));
+        }
 
         super.appendHoverText(stack,worldIn, pTooltipComponents, flagIn);
     }

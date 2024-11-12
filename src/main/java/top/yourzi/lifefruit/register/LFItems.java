@@ -10,6 +10,7 @@ import top.yourzi.lifefruit.Lifefruit;
 import top.yourzi.lifefruit.item.DragonFruitItem;
 import top.yourzi.lifefruit.item.LifeFruitItem;
 import top.yourzi.lifefruit.item.LifeFruitWithVineItem;
+import top.yourzi.lifefruit.item.VineItem;
 
 public class LFItems {
     public static final DeferredRegister<Item> ITEMS =
@@ -25,7 +26,7 @@ public class LFItems {
             () -> new LifeFruitWithVineItem(new Item.Properties()));
 
     public static final RegistryObject<Item> VINE = ITEMS.register("vine",
-            () -> new ItemNameBlockItem(LFBlocks.LIFE_FRUIT_VINE_CROP.get(), new Item.Properties()));
+            () -> new VineItem(new Item.Properties()));
 
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);

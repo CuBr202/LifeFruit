@@ -1,6 +1,7 @@
 package top.yourzi.lifefruit.item;
 
 
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -29,8 +30,17 @@ public class DragonFruitItem extends ItemNameBlockItem {
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> pTooltipComponents, TooltipFlag flagIn) {
 
-        pTooltipComponents.add(Component.translatable("tooltip.lifefruit.when_eat"));
-        pTooltipComponents.add(Component.translatable("tooltip.lifefruit.ender_dragon_fruit"));
+
+        if (Screen.hasShiftDown()) {
+            pTooltipComponents.add(Component.translatable("tooltip.lifefruit.pressed_shift"));
+            pTooltipComponents.add(Component.translatable("tooltip.lifefruit.ender_dragon_fruit_1"));
+            pTooltipComponents.add(Component.translatable("tooltip.lifefruit.ender_dragon_fruit_2"));
+            pTooltipComponents.add(Component.literal(""));
+            pTooltipComponents.add(Component.translatable("tooltip.lifefruit.when_eat"));
+            pTooltipComponents.add(Component.translatable("tooltip.lifefruit.ender_dragon_fruit"));
+        }else {
+            pTooltipComponents.add(Component.translatable("tooltip.lifefruit.press_shift"));
+        }
 
         super.appendHoverText(stack,worldIn, pTooltipComponents, flagIn);
     }
