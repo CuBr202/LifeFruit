@@ -1,0 +1,8 @@
+{
+  "watering": {
+    "subtitle": "sounds.lifefruit.watering",
+    "sounds": [
+      "lifefruit:watering"
+    ]
+  }
+}

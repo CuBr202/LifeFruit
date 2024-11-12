@@ -29,10 +29,10 @@ public abstract class PlayerMixin extends LivingEntity{
 
     @Shadow @Final private static Logger LOGGER;
 
-    @Shadow public abstract boolean hurt(DamageSource p_36154_, float p_36155_);
+    @Shadow public abstract boolean hurt(DamageSource source, float hurt);
 
-    protected PlayerMixin(EntityType<? extends LivingEntity> p_20966_, Level p_20967_) {
-        super(p_20966_, p_20967_);
+    protected PlayerMixin(EntityType<? extends LivingEntity> entityType, Level level) {
+        super(entityType, level);
     }
 
     @Inject(method = "aiStep", at = @At(value = "HEAD"))

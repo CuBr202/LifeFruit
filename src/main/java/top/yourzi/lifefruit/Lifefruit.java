@@ -31,6 +31,7 @@ import top.yourzi.lifefruit.event.ModEventListener;
 import top.yourzi.lifefruit.register.LFBlocks;
 import top.yourzi.lifefruit.register.LFCreativeTab;
 import top.yourzi.lifefruit.register.LFItems;
+import top.yourzi.lifefruit.sound.LFSounds;
 import top.yourzi.lifefruit.world.LFLootAdditions;
 
 
@@ -53,6 +54,7 @@ public class Lifefruit {
         LFItems.register(modEventBus);
         LFBlocks.register(modEventBus);
         LFCreativeTab.register(modEventBus);
+        LFSounds.register(modEventBus);
         LOOT_MODIFIERS.register("loot_additions", LFLootAdditions.CODEC);
         LOOT_MODIFIERS.register(modEventBus);
 

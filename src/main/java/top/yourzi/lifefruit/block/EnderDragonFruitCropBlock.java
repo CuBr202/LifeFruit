@@ -4,6 +4,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
@@ -28,7 +30,9 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.ForgeHooks;
+import net.minecraftforge.items.ItemHandlerHelper;
 import top.yourzi.lifefruit.register.LFItems;
+import top.yourzi.lifefruit.sound.LFSounds;
 
 public class EnderDragonFruitCropBlock extends CropBlock {
     private static final int MAX_AGE = 3;
@@ -55,9 +59,11 @@ public class EnderDragonFruitCropBlock extends CropBlock {
         if (!level.isClientSide && itemstack.is(Items.DRAGON_BREATH)) {
             player.swing(hand, true);
             level.setBlockAndUpdate(pos, state.setValue(GrowthTime, 17));
-            //level.playSound(player, pos, SoundEvents.SHEEP_SHEAR, SoundSource.PLAYERS, 1.0F, 0.8F + level.random.nextFloat() * 0.4F);
+            level.playSeededSound(null, pos.getX(), pos.getY(), pos.getZ(),
+                    LFSounds.WATER_SOUND.get(), SoundSource.BLOCKS, 1f, 1f, 0);
             if (!player.isCreative()) {
                 itemstack.shrink(1);
+                ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(Items.GLASS_BOTTLE));
             }
             return InteractionResult.SUCCESS;
         }
@@ -75,7 +81,7 @@ public class EnderDragonFruitCropBlock extends CropBlock {
                 int $$5 = source.nextInt(2) * 2 - 1;
                 int $$6 = source.nextInt(2) * 2 - 1;
                 double $$7 = (double)pos.getX() + 0.5 + 0.25 * (double)$$5;
-                double $$8 = (double)((float)pos.getY() + source.nextFloat() - 0.25);
+                double $$8 = ((float)pos.getY() + source.nextFloat() - 0.25);
                 double $$9 = (double)pos.getZ() + 0.5 + 0.25 * (double)$$6;
                 double $$10 = (double)(source.nextFloat() * (float)$$5) / 70;
                 double $$11 = ((double)source.nextFloat() - 0.5) * 0.125 / 20;

@@ -1,6 +1,8 @@
 {
   "lifefruit.creativetab.base": "Life Fruit",
 
+  "sounds.lifefruit.watering": "Watering",
+
   "tooltip.lifefruit.when_eat": "§9When Eaten：",
   "tooltip.lifefruit.pressed_shift": "§Press §f[shift]§8 to view the information",
   "tooltip.lifefruit.press_shift": "§Press §7[shift]§8 to view the information",

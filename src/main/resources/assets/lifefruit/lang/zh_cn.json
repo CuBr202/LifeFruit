@@ -1,6 +1,8 @@
 {
   "lifefruit.creativetab.base": "生命果",
 
+  "sounds.lifefruit.watering": "浇灌",
+
   "tooltip.lifefruit.when_eat": "§9当食用时：",
   "tooltip.lifefruit.pressed_shift": "§8按住§f[shift]§8查看信息",
   "tooltip.lifefruit.press_shift": "§8按住§7[shift]§8查看信息",
@@ -13,7 +15,6 @@
   "tooltip.lifefruit.ender_dragon_fruit_2": "§5仅在浇灌龙息后约20分钟内且处于末地才会生长",
   "tooltip.lifefruit.vine_1": "§2仅能种植在苔藓块上",
   "tooltip.lifefruit.vine_2": "§2仅在繁茂洞穴群系才会生长",
-
 
   "block.lifefruit.life_fruit_vine_crop": "生命藤",
   "block.lifefruit.ender_dragon_fruit_crop": "影龙果植株",

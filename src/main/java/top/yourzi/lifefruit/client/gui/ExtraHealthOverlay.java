@@ -3,7 +3,6 @@ package top.yourzi.lifefruit.client.gui;
 import com.mojang.logging.LogUtils;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffects;
@@ -16,8 +15,6 @@ import net.minecraftforge.fml.ModList;
 import org.slf4j.Logger;
 import top.yourzi.lifefruit.capability.DragonHeart.CurrentDragonHeartCapabilityProvider;
 import top.yourzi.lifefruit.capability.LifeHeart.CurrentLifeHealthCapabilityProvider;
-
-import java.util.Random;
 
 @OnlyIn(Dist.CLIENT)
 public class ExtraHealthOverlay {
@@ -42,7 +39,7 @@ public class ExtraHealthOverlay {
     public static final IGuiOverlay EXTRA_HEALTH_HUD = (gui, guiGraphics, partialTick, screenWidth, screenHeight) -> {
         Minecraft mc = Minecraft.getInstance();
         Player player = mc.player;
-
+        if (player == null) {return;}
 
 
 
@@ -92,6 +89,11 @@ public class ExtraHealthOverlay {
         boolean blink = lifeHealthBlink || dragonHealthBlink;
         int shake = -1;
         int offy = 0;
+        int offy2 = 0;
+
+        if (player.getAirSupply() < player.getMaxAirSupply() || (player.isPassenger() && player.getVehicle().showVehicleHealth())){
+            offy2 = 10;
+        }
 
 
 
@@ -122,7 +124,7 @@ public class ExtraHealthOverlay {
             LIFE_HEALTH_HALF = new ResourceLocation("lifefruit:textures/gui/life_health_withered_half.png");
             DRAGON_HEALTH = new ResourceLocation("lifefruit:textures/gui/dragon_health_withered.png");
             DRAGON_HEALTH_HALF = new ResourceLocation("lifefruit:textures/gui/dragon_health_withered_half.png");
-        } else if (player.isFreezing()) {
+        } else if (player.isFreezing() && player.getTicksFrozen() >= player.getTicksRequiredToFreeze()) {
             LIFE_HEALTH = new ResourceLocation("lifefruit:textures/gui/life_health_frozen.png");
             LIFE_HEALTH_HALF = new ResourceLocation("lifefruit:textures/gui/life_health_frozen_half.png");
             DRAGON_HEALTH = new ResourceLocation("lifefruit:textures/gui/dragon_health_frozen.png");
@@ -134,7 +136,7 @@ public class ExtraHealthOverlay {
         int x = mc.getWindow().getGuiScaledWidth() / 2 - 90;
 
 
-        int y = mc.getWindow().getGuiScaledHeight() - Gui.rightHeight + 10;
+        int y = mc.getWindow().getGuiScaledHeight() - Gui.rightHeight + 10 + offy2;
 
 
         if (player == null || gui.getMinecraft().options.hideGui || !gui.shouldDrawSurvivalElements()) {
