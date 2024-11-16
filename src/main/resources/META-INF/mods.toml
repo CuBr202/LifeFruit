@@ -15,6 +15,7 @@ displayName = "${mod_name}"
 
 authors = "${mod_authors}"
 
+logoFile="icon.png"
 
 description = '''${mod_description}'''
 

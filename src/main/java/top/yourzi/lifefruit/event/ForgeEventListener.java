@@ -57,14 +57,12 @@ public class ForgeEventListener {
 
             player.getCapability(MaxLifeHeartCapabilityProvider.MAX_LIFE_HEART_CAPABILITY).ifPresent((heart) ->
                     {
-                        if (player.getMaxHealth() < heart.getMaxLifeHeart()) {
-                            heart.setMaxLifeHeart((int) player.getMaxHealth());
-                        }
-                        Channel.sendToPlayer(new CurrentLifeHealthPacket(heart.getMaxLifeHeart()), player);
                         player.getCapability(CurrentLifeHealthCapabilityProvider.CURRENT_LIFE_HEALTH_CAPABILITY).ifPresent((cheart) ->
-                                {   if (heart.getMaxLifeHeart() < cheart.getCurrentLifeHeart()) {
-                                    cheart.setCurrentLifeHeart(heart.getMaxLifeHeart());
-                                }
+                                {
+                                    if (player.getMaxHealth() < heart.getMaxLifeHeart() && cheart.getCurrentLifeHeart() > player.getMaxHealth()) {
+                                        cheart.setCurrentLifeHeart((int) player.getMaxHealth());
+                                    }
+
                                     Channel.sendToPlayer(new CurrentLifeHealthPacket(cheart.getCurrentLifeHeart()), player);
                                 }
                         );
@@ -72,15 +70,16 @@ public class ForgeEventListener {
             );
             player.getCapability(MaxDragonHeartCapabilityProvider.MAX_DRAGON_HEART_CAPABILITY).ifPresent((heart) ->
                     {
-                        if (player.getMaxHealth() < heart.getMaxDragonHeart()) {
-                            heart.setMaxDragonHeart((int) player.getMaxHealth());
-                        }
-                        Channel.sendToPlayer(new MaxDragonHealthPacket(heart.getMaxDragonHeart()), player);
-                        player.getCapability(CurrentDragonHeartCapabilityProvider.CURRENT_DRAGON_HEART_CAPABILITY).ifPresent((cheart) ->
-                                {   if (heart.getMaxDragonHeart() < cheart.getCurrentDragonHeart()) {
-                                    cheart.setCurrentDragonHeart(heart.getMaxDragonHeart());
-                                }
-                                    Channel.sendToPlayer(new CurrentDragonHealthPacket(cheart.getCurrentDragonHeart()), player);
+                        player.getCapability(CurrentDragonHeartCapabilityProvider.CURRENT_DRAGON_HEART_CAPABILITY).ifPresent((cdheart) ->
+                                {
+                                    player.getCapability(CurrentLifeHealthCapabilityProvider.CURRENT_LIFE_HEALTH_CAPABILITY).ifPresent((cheart) ->
+                                    {
+                                        if (cdheart.getCurrentDragonHeart() > cheart.getCurrentLifeHeart()) {
+                                            cdheart.setCurrentDragonHeart(cheart.getCurrentLifeHeart());
+                                        }
+                                    });
+
+                                    Channel.sendToPlayer(new CurrentDragonHealthPacket(cdheart.getCurrentDragonHeart()), player);
                                 }
                         );
                     }

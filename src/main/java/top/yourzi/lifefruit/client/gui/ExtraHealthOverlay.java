@@ -113,6 +113,7 @@ public class ExtraHealthOverlay {
         ResourceLocation DRAGON_HEALTH = new ResourceLocation("lifefruit:textures/gui/dragon_health.png");
         ResourceLocation DRAGON_HEALTH_HALF = new ResourceLocation("lifefruit:textures/gui/dragon_health_half.png");
         ResourceLocation BLINK_HEALTH = new ResourceLocation("lifefruit:textures/gui/blink_heart.png");
+        ResourceLocation OVERLAY_HEART = new ResourceLocation("lifefruit:textures/gui/overlay_heart.png");
 
         if (player.hasEffect(MobEffects.POISON)) {
             LIFE_HEALTH = new ResourceLocation("lifefruit:textures/gui/life_health_poison.png");
@@ -207,47 +208,75 @@ public class ExtraHealthOverlay {
                     if ( i == shake ) {
                         dy = y -2;
                     }
-                    guiGraphics.blit(BLINK_HEALTH, x + ((i % 10 * 8) % 10) - 1, dy - 1, 90, 0, 0, 10, 10,
+                    guiGraphics.blit(BLINK_HEALTH, x + (i % 10 * 8) - 1, dy - 1, 90, 0, 0, 10, 10,
                             10, 10);
                 }
             }
 
             if (lifehealth > 0) {
-                for (int i = 0; i < lifeHearts + halfLifeHearts; i++) {
+                boolean overlay = (lifeHearts + halfLifeHearts) > 10;
+                if (overlay){
+                    for (int i = 0; i < 10; i++) {
+                        int dy = y;
+                        if ( i == shake ) {
+                            dy = y -2;
+                        }
+                        guiGraphics.blit(LIFE_HEALTH, x + (i * 8), dy, 90, 0, 0, 8, 8,
+                                8, 8);
+                        guiGraphics.blit(OVERLAY_HEART, x + (i * 8), dy, 90, 0, 0, 8, 8,
+                                8, 8);
+                    }
+                }
+
+                for (int i = 0; i < ( overlay ? ((lifeHearts + halfLifeHearts) - ((lifeHearts + halfLifeHearts) / 10 * 10)) : (lifeHearts + halfLifeHearts)); i++) {
                     int dy = y;
                     if ( i == shake ) {
                         dy = y -2;
                     }
-                    guiGraphics.blit(LIFE_HEALTH_HALF, x + ((i % 10 * 8) % 10), dy, 90, 0, 0, 8, 8,
+                    guiGraphics.blit(LIFE_HEALTH_HALF, x + (i % 10 * 8), dy, 90, 0, 0, 8, 8,
                             8, 8);
                 }
-                for (int i = 0; i < lifeHearts; i++) {
+                for (int i = 0; i < ( overlay ? (lifeHearts - (lifeHearts / 10 * 10)) : lifeHearts); i++) {
                     int dy = y;
                     if ( i == shake ) {
                         dy = y -2;
                     }
-                    guiGraphics.blit(LIFE_HEALTH, x + ((i % 10 * 8) % 10), dy, 90, 0, 0, 8, 8,
+                    guiGraphics.blit(LIFE_HEALTH, x + (i % 10 * 8), dy, 90, 0, 0, 8, 8,
                             8, 8);
                 }
             }
 
 
             if (dragonhealth > 0) {
-                for (int i = 0; i < dragonHearts + halfDragonHearts; i++) {
+                boolean overlay = (dragonHearts + halfDragonHearts) > 10;
+                if (overlay){
+                    for (int i = 0; i < 10; i++) {
+                        int dy = y;
+                        if ( i == shake ) {
+                            dy = y -2;
+                        }
+                        guiGraphics.blit(DRAGON_HEALTH, x + (i * 8), dy, 90, 0, 0, 8, 8,
+                                8, 8);
+                        guiGraphics.blit(OVERLAY_HEART, x + (i * 8), dy, 90, 0, 0, 8, 8,
+                                8, 8);
+                    }
+                }
+
+                for (int i = 0; i < ( overlay ? ((dragonHearts + halfDragonHearts) - ((dragonHearts + halfDragonHearts) / 10 * 10)) : (dragonHearts + halfDragonHearts)); i++) {
                     int dy = y;
                     if ( i == shake ) {
                         dy = y -2;
                     }
-                    guiGraphics.blit(DRAGON_HEALTH_HALF, x + ((i % 10 * 8) % 10), dy, 90, 0, 0, 8, 8,
+                    guiGraphics.blit(DRAGON_HEALTH_HALF, x + (i % 10 * 8), dy, 90, 0, 0, 8, 8,
                             8, 8);
 
                 }
-                for (int i = 0; i < dragonHearts; i++) {
+                for (int i = 0; i < ( overlay ? (dragonHearts - (dragonHearts / 10 * 10)) : dragonHearts); i++) {
                     int dy = y;
                     if ( i == shake ) {
                         dy = y -2;
                     }
-                    guiGraphics.blit(DRAGON_HEALTH, x + ((i % 10 * 8) % 10), dy, 90, 0, 0, 8, 8,
+                    guiGraphics.blit(DRAGON_HEALTH, x + (i % 10 * 8), dy, 90, 0, 0, 8, 8,
                             8, 8);
 
                 }

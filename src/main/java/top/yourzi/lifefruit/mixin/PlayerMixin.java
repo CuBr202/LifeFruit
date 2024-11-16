@@ -1,7 +1,5 @@
 package top.yourzi.lifefruit.mixin;
 
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.damagesource.CombatTracker;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -45,15 +43,20 @@ public abstract class PlayerMixin extends LivingEntity{
                 this.getCapability(CurrentLifeHealthCapabilityProvider.CURRENT_LIFE_HEALTH_CAPABILITY).ifPresent((heart) -> {
                     this.getCapability(MaxLifeHeartCapabilityProvider.MAX_LIFE_HEART_CAPABILITY).ifPresent((maxheart) -> {
 
-                        if (heart.getCurrentLifeHeart() < maxheart.getMaxLifeHeart()){
-                            heart.increaseCurrentLifeHeart(maxheart.getMaxLifeHeart());
+                        int maxLifeHeart = (int) Math.min(maxheart.getMaxLifeHeart(), this.getMaxHealth());
+
+                        if (heart.getCurrentLifeHeart() < maxLifeHeart){
+                            heart.increaseCurrentLifeHeart(maxLifeHeart);
                             this.getFoodData().setExhaustion(exhaustion + 6);
+
                         } else if (heart.getCurrentLifeHeart() >= maxheart.getMaxLifeHeart()) {
                             this.getCapability(CurrentDragonHeartCapabilityProvider.CURRENT_DRAGON_HEART_CAPABILITY).ifPresent((dragonheart) -> {
                                 this.getCapability(MaxDragonHeartCapabilityProvider.MAX_DRAGON_HEART_CAPABILITY).ifPresent((maxdragonheart) -> {
 
-                                    if (dragonheart.getCurrentDragonHeart() < maxdragonheart.getMaxDragonHeart()){
-                                        dragonheart.increaseMaxDragonHeart(maxdragonheart.getMaxDragonHeart());
+                                    int maxDragonHeart = Math.min(maxdragonheart.getMaxDragonHeart(),maxLifeHeart);
+
+                                    if (dragonheart.getCurrentDragonHeart() < maxDragonHeart){
+                                        dragonheart.increaseMaxDragonHeart(maxDragonHeart);
 
                                         this.getFoodData().setExhaustion(exhaustion + 6);
 

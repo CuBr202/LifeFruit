@@ -7,10 +7,10 @@
   "tooltip.lifefruit.pressed_shift": "§8按住§f[shift]§8查看信息",
   "tooltip.lifefruit.press_shift": "§8按住§7[shift]§8查看信息",
 
-  "tooltip.lifefruit.life_fruit": "   §l§6+§r\uE0B1",
+  "tooltip.lifefruit.life_fruit": "   §l§6+§r\ue0f1",
   "tooltip.lifefruit.life_fruit_with_vine": "§2手持此物品，另一只手手持剪刀",
   "tooltip.lifefruit.life_fruit_with_vine_1": "§2按下使用键来将其修剪成生命果",
-  "tooltip.lifefruit.ender_dragon_fruit": "   §l§d+§r\uE0B2",
+  "tooltip.lifefruit.ender_dragon_fruit": "   §l§d+§r\ue0f2",
   "tooltip.lifefruit.ender_dragon_fruit_1": "§5仅能种植在黑曜石上",
   "tooltip.lifefruit.ender_dragon_fruit_2": "§5仅在浇灌龙息后约20分钟内且处于末地才会生长",
   "tooltip.lifefruit.vine_1": "§2仅能种植在苔藓块上",
