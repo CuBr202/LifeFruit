@@ -4,6 +4,8 @@ import com.mojang.logging.LogUtils;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
@@ -11,12 +13,14 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
+import net.minecraftforge.common.ForgeConfig;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.fml.ModList;
 import org.slf4j.Logger;
 import top.yourzi.lifefruit.capability.DragonHeart.CurrentDragonHeartCapabilityProvider;
 import top.yourzi.lifefruit.capability.LifeHeart.CurrentLifeHealthCapabilityProvider;
 
-@OnlyIn(Dist.CLIENT)
+
 public class ExtraHealthOverlay {
     Minecraft mc = Minecraft.getInstance();
     Player player = mc.player;
@@ -34,11 +38,23 @@ public class ExtraHealthOverlay {
     private static long lastLifeHealthTime;
     private static long lastDragonHealthTime;
 
+    public static int tickCount;
+    public static int tick;
+
+
+
+
+
+
     private static final Logger LOGGER = LogUtils.getLogger();
 
     public static final IGuiOverlay EXTRA_HEALTH_HUD = (gui, guiGraphics, partialTick, screenWidth, screenHeight) -> {
         Minecraft mc = Minecraft.getInstance();
         Player player = mc.player;
+
+        if (tickCount % 12 == 0) {
+            tick++;
+        }
         if (player == null) {return;}
 
 
@@ -104,6 +120,8 @@ public class ExtraHealthOverlay {
         }
         if (player.hasEffect(MobEffects.REGENERATION) ) {
             shake = gui.getGuiTicks() % Mth.ceil( player.getMaxHealth() + 5.0F );
+        }else {
+            shake = -1;
         }
 
 
@@ -202,6 +220,11 @@ public class ExtraHealthOverlay {
             }
         }else {
 
+            if (player.hasEffect(MobEffects.REGENERATION) && ModList.get().isLoaded("overflowingbars")) {
+
+                shake = (tick % Mth.ceil(Math.min(20.0F, player.getMaxHealth()) + 5.0F));
+            }
+
             if (blink && player.getHealth() >= player.getMaxHealth()){
                 for (int i = 0; i < player.getMaxHealth() / 2; i ++){
                     int dy = y;
@@ -228,7 +251,7 @@ public class ExtraHealthOverlay {
                     }
                 }
 
-                for (int i = 0; i < ( overlay ? ((lifeHearts + halfLifeHearts) - ((lifeHearts + halfLifeHearts) / 10 * 10)) : (lifeHearts + halfLifeHearts)); i++) {
+                for (int i = 0; i < ((lifeHearts + halfLifeHearts) % 10 == 0 ? 10 : (lifeHearts + halfLifeHearts) % 10); i++) {
                     int dy = y;
                     if ( i == shake ) {
                         dy = y -2;
@@ -236,7 +259,7 @@ public class ExtraHealthOverlay {
                     guiGraphics.blit(LIFE_HEALTH_HALF, x + (i % 10 * 8), dy, 90, 0, 0, 8, 8,
                             8, 8);
                 }
-                for (int i = 0; i < ( overlay ? (lifeHearts - (lifeHearts / 10 * 10)) : lifeHearts); i++) {
+                for (int i = 0; i < ((((lifeHearts + halfLifeHearts) - 1) % 10 == 0) && halfLifeHearts == 1 ? 0 : ((lifeHearts) % 10 == 0 ? 10 : (lifeHearts) % 10)) ; i++) {
                     int dy = y;
                     if ( i == shake ) {
                         dy = y -2;
@@ -262,7 +285,7 @@ public class ExtraHealthOverlay {
                     }
                 }
 
-                for (int i = 0; i < ( overlay ? ((dragonHearts + halfDragonHearts) - ((dragonHearts + halfDragonHearts) / 10 * 10)) : (dragonHearts + halfDragonHearts)); i++) {
+                for (int i = 0; i < ((dragonHearts + halfDragonHearts) % 10 == 0 ? 10 : (dragonHearts + halfDragonHearts) % 10); i++) {
                     int dy = y;
                     if ( i == shake ) {
                         dy = y -2;
@@ -271,7 +294,7 @@ public class ExtraHealthOverlay {
                             8, 8);
 
                 }
-                for (int i = 0; i < ( overlay ? (dragonHearts - (dragonHearts / 10 * 10)) : dragonHearts); i++) {
+                for (int i = 0; i <((((dragonHearts + halfDragonHearts) - 1) % 10 == 0) && halfDragonHearts == 1 ? 0 : ((dragonHearts) % 10 == 0 ? 10 : (dragonHearts) % 10)); i++) {
                     int dy = y;
                     if ( i == shake ) {
                         dy = y -2;

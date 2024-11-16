@@ -2,8 +2,10 @@ package top.yourzi.lifefruit.event;
 
 import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import top.yourzi.lifefruit.Lifefruit;
 import top.yourzi.lifefruit.capability.DragonHeart.CurrentDragonHeartCapabilityProvider;
@@ -21,6 +23,7 @@ public class ModEventListener {
     public static void registerOverlay(RegisterGuiOverlaysEvent event) {
         event.registerAboveAll("extra_health", ExtraHealthOverlay.EXTRA_HEALTH_HUD);
     }
+
 
     @SubscribeEvent
     public static void registerChannel(FMLCommonSetupEvent event) {

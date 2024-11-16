@@ -29,6 +29,10 @@ public abstract class PlayerMixin extends LivingEntity{
 
     @Shadow public abstract boolean hurt(DamageSource source, float hurt);
 
+    @Shadow public abstract float getAbsorptionAmount();
+
+    @Shadow private boolean reducedDebugInfo;
+
     protected PlayerMixin(EntityType<? extends LivingEntity> entityType, Level level) {
         super(entityType, level);
     }
@@ -49,7 +53,7 @@ public abstract class PlayerMixin extends LivingEntity{
                             heart.increaseCurrentLifeHeart(maxLifeHeart);
                             this.getFoodData().setExhaustion(exhaustion + 6);
 
-                        } else if (heart.getCurrentLifeHeart() >= maxheart.getMaxLifeHeart()) {
+                        } else if (heart.getCurrentLifeHeart() >= maxLifeHeart) {
                             this.getCapability(CurrentDragonHeartCapabilityProvider.CURRENT_DRAGON_HEART_CAPABILITY).ifPresent((dragonheart) -> {
                                 this.getCapability(MaxDragonHeartCapabilityProvider.MAX_DRAGON_HEART_CAPABILITY).ifPresent((maxdragonheart) -> {
 
@@ -82,6 +86,13 @@ public abstract class PlayerMixin extends LivingEntity{
                     hurt = this.getDamageAfterArmorAbsorb(source, hurt);
                     hurt = this.getDamageAfterMagicAbsorb(source, hurt);
                     hurt = ForgeHooks.onLivingDamage(this, source, hurt);
+
+
+                    if(this.getAbsorptionAmount() > 0){
+                        int AbsorptionAmount = (int) this.getAbsorptionAmount();
+                        this.setAbsorptionAmount(Math.max(AbsorptionAmount - hurt , 0));
+                        hurt = Math.max(hurt - AbsorptionAmount, 0);
+                    }
 
                     if (dragonheart.getCurrentDragonHeart() > hurt) {
                         dragonheart.setCurrentDragonHeart((int) (dragonheart.getCurrentDragonHeart() - hurt));
