@@ -1,13 +1,10 @@
 package top.yourzi.lifefruit.event;
 
-
 import com.mojang.logging.LogUtils;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
-import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHealEvent;
@@ -19,10 +16,10 @@ import top.yourzi.lifefruit.Lifefruit;
 import top.yourzi.lifefruit.capability.DragonHeart.CurrentDragonHeartCapabilityProvider;
 import top.yourzi.lifefruit.capability.DragonHeart.MaxDragonHeartCapabilityProvider;
 import top.yourzi.lifefruit.capability.LifeHeart.CurrentLifeHealthCapabilityProvider;
-import top.yourzi.lifefruit.capability.LifeHeart.MaxLifeHeartCapability;
 import top.yourzi.lifefruit.capability.LifeHeart.MaxLifeHeartCapabilityProvider;
 import top.yourzi.lifefruit.client.gui.ExtraHealthOverlay;
 import top.yourzi.lifefruit.command.LFCommand;
+import top.yourzi.lifefruit.item.LifeFruitItem;
 import top.yourzi.lifefruit.network.Channel;
 import top.yourzi.lifefruit.network.packet.S2C.CurrentDragonHealthPacket;
 import top.yourzi.lifefruit.network.packet.S2C.CurrentLifeHealthPacket;
@@ -53,7 +50,7 @@ public class ForgeEventListener {
     public static void onPlayerTick(LivingEvent.LivingTickEvent event) {
 
         if (event.getEntity() instanceof ServerPlayer player){
-
+            LifeFruitItem.maxHealth = (int) player.getMaxHealth();
             player.getCapability(CurrentLifeHealthCapabilityProvider.CURRENT_LIFE_HEALTH_CAPABILITY).ifPresent((heart) ->
                     Channel.sendToPlayer(new CurrentLifeHealthPacket(heart.getCurrentLifeHeart()), player)
             );

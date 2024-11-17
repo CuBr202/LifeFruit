@@ -4,27 +4,16 @@ import com.mojang.logging.LogUtils;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.item.Items;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
-import net.minecraftforge.common.ForgeConfig;
-import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.fml.ModList;
 import org.slf4j.Logger;
 import top.yourzi.lifefruit.capability.DragonHeart.CurrentDragonHeartCapabilityProvider;
 import top.yourzi.lifefruit.capability.LifeHeart.CurrentLifeHealthCapabilityProvider;
 
-import java.util.Objects;
-
-import static net.minecraft.world.entity.ai.attributes.Attributes.ARMOR_TOUGHNESS;
 
 
 public class ExtraHealthOverlay {
@@ -152,7 +141,7 @@ public class ExtraHealthOverlay {
         int x = mc.getWindow().getGuiScaledWidth() / 2 - 90;
 
 
-        int y = screenHeight - 39;
+        int y = mc.getWindow().getGuiScaledHeight() - 39;
 
 
         if (player == null || gui.getMinecraft().options.hideGui || !gui.shouldDrawSurvivalElements()) {

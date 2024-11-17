@@ -98,10 +98,8 @@ public abstract class PlayerMixin extends LivingEntity{
                         dragonheart.setCurrentDragonHeart((int) (dragonheart.getCurrentDragonHeart() - hurt));
                     }else if (dragonheart.getCurrentDragonHeart() <= hurt && (heart.getCurrentLifeHeart() + dragonheart.getCurrentDragonHeart()) > hurt) {
                         hurt = hurt - dragonheart.getCurrentDragonHeart();
-                        LOGGER.info("hurt: " + hurt + "lifeheart: " + heart.getCurrentLifeHeart());
                         dragonheart.setCurrentDragonHeart(0);
                         heart.setCurrentLifeHeart((int) (heart.getCurrentLifeHeart() - hurt));
-                        LOGGER.info("hurt: " + hurt + "lifeheart: " + heart.getCurrentLifeHeart());
                     } else if ((heart.getCurrentLifeHeart() + dragonheart.getCurrentDragonHeart()) <= hurt) {
                         dragonheart.setCurrentDragonHeart(0);
                         heart.setCurrentLifeHeart(0);
