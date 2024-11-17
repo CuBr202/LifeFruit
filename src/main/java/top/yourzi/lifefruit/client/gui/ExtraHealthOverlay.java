@@ -39,8 +39,10 @@ public class ExtraHealthOverlay {
     private static long lastDragonHealthTime;
 
     public static int tickCount;
-    public static int tick;
 
+    public static void startTick(){
+        tickCount++;
+    }
 
 
 
@@ -51,13 +53,7 @@ public class ExtraHealthOverlay {
     public static final IGuiOverlay EXTRA_HEALTH_HUD = (gui, guiGraphics, partialTick, screenWidth, screenHeight) -> {
         Minecraft mc = Minecraft.getInstance();
         Player player = mc.player;
-
-        if (tickCount % 12 == 0) {
-            tick++;
-        }
         if (player == null) {return;}
-
-
 
         boolean lifeHealthBlink = lifeHealthBlinkTime > (long) gui.getGuiTicks() && ( lifeHealthBlinkTime - (long) gui.getGuiTicks() ) / 3L % 2L == 1L;
         boolean dragonHealthBlink = dragonHealthBlinkTime > (long) gui.getGuiTicks() && ( dragonHealthBlinkTime - (long) gui.getGuiTicks() ) / 3L % 2L == 1L;
@@ -221,8 +217,9 @@ public class ExtraHealthOverlay {
         }else {
 
             if (player.hasEffect(MobEffects.REGENERATION) && ModList.get().isLoaded("overflowingbars")) {
-
-                shake = (tick % Mth.ceil(Math.min(20.0F, player.getMaxHealth()) + 5.0F));
+                shake = ((tickCount / 2) % Mth.ceil(Math.min(20.0F, player.getMaxHealth()) + 5.0F));
+            } else if (player.hasEffect(MobEffects.REGENERATION)) {
+                shake = gui.getGuiTicks() % Mth.ceil(Math.min(20.0F, player.getMaxHealth()) + 5.0F );
             }
 
             if (blink && player.getHealth() >= player.getMaxHealth()){

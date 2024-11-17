@@ -5,6 +5,7 @@ import com.mojang.logging.LogUtils;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.RegisterCommandsEvent;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
@@ -20,6 +21,7 @@ import top.yourzi.lifefruit.capability.DragonHeart.MaxDragonHeartCapabilityProvi
 import top.yourzi.lifefruit.capability.LifeHeart.CurrentLifeHealthCapabilityProvider;
 import top.yourzi.lifefruit.capability.LifeHeart.MaxLifeHeartCapability;
 import top.yourzi.lifefruit.capability.LifeHeart.MaxLifeHeartCapabilityProvider;
+import top.yourzi.lifefruit.client.gui.ExtraHealthOverlay;
 import top.yourzi.lifefruit.command.LFCommand;
 import top.yourzi.lifefruit.network.Channel;
 import top.yourzi.lifefruit.network.packet.S2C.CurrentDragonHealthPacket;
@@ -34,8 +36,12 @@ public class ForgeEventListener {
     private static final Logger LOGGER = LogUtils.getLogger();
 
     @SubscribeEvent
-    public static void onPlayerHeal(LivingHealEvent event) {
+    public static void onClientTick(TickEvent.ClientTickEvent event) {
+        ExtraHealthOverlay.startTick();
+    }
 
+    @SubscribeEvent
+    public static void onPlayerHeal(LivingHealEvent event) {
     }
 
     @SubscribeEvent
