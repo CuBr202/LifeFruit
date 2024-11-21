@@ -88,11 +88,11 @@ public abstract class PlayerMixin extends LivingEntity{
                     hurt = ForgeHooks.onLivingDamage(this, source, hurt);
 
 
-                    if(this.getAbsorptionAmount() > 0){
-                        int AbsorptionAmount = (int) this.getAbsorptionAmount();
-                        this.setAbsorptionAmount(Math.max(AbsorptionAmount - hurt , 0));
-                        hurt = Math.max(hurt - AbsorptionAmount, 0);
-                    }
+
+                    int AbsorptionAmount = (int) this.getAbsorptionAmount();
+                    this.setAbsorptionAmount(Math.max(AbsorptionAmount - hurt , 0));
+                    hurt = Math.max(hurt - AbsorptionAmount, 0);
+
 
                     if (dragonheart.getCurrentDragonHeart() > hurt) {
                         dragonheart.setCurrentDragonHeart((int) (dragonheart.getCurrentDragonHeart() - hurt));
@@ -113,6 +113,9 @@ public abstract class PlayerMixin extends LivingEntity{
                     hurt = this.getDamageAfterArmorAbsorb(source, hurt);
                     hurt = this.getDamageAfterMagicAbsorb(source, hurt);
                     hurt = ForgeHooks.onLivingDamage(this, source, hurt);
+                    int AbsorptionAmount = (int) this.getAbsorptionAmount();
+                    this.setAbsorptionAmount(Math.max(AbsorptionAmount - hurt , 0));
+                    hurt = Math.max(hurt - AbsorptionAmount, 0);
 
                     if (heart.getCurrentLifeHeart() > hurt) {
                         heart.setCurrentLifeHeart((int) (heart.getCurrentLifeHeart() - hurt));

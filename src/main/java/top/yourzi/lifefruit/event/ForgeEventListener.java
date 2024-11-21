@@ -1,13 +1,19 @@
 package top.yourzi.lifefruit.event;
 
 import com.mojang.logging.LogUtils;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHealEvent;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -19,7 +25,6 @@ import top.yourzi.lifefruit.capability.LifeHeart.CurrentLifeHealthCapabilityProv
 import top.yourzi.lifefruit.capability.LifeHeart.MaxLifeHeartCapabilityProvider;
 import top.yourzi.lifefruit.client.gui.ExtraHealthOverlay;
 import top.yourzi.lifefruit.command.LFCommand;
-import top.yourzi.lifefruit.item.LifeFruitItem;
 import top.yourzi.lifefruit.network.Channel;
 import top.yourzi.lifefruit.network.packet.S2C.CurrentDragonHealthPacket;
 import top.yourzi.lifefruit.network.packet.S2C.CurrentLifeHealthPacket;
@@ -27,10 +32,32 @@ import top.yourzi.lifefruit.network.packet.S2C.MaxDragonHealthPacket;
 import top.yourzi.lifefruit.network.packet.S2C.MaxLifeHealthPacket;
 import top.yourzi.lifefruit.register.LFItems;
 
+import static top.yourzi.lifefruit.capability.DragonHeart.MaxDragonHeartCapabilityProvider.clientMaxDragonHeart;
+import static top.yourzi.lifefruit.capability.LifeHeart.MaxLifeHeartCapabilityProvider.clientMaxLifeHeart;
+
 @Mod.EventBusSubscriber(modid = Lifefruit.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ForgeEventListener {
 
     private static final Logger LOGGER = LogUtils.getLogger();
+
+    @OnlyIn(Dist.CLIENT)
+    @SubscribeEvent
+    public static void onItemTooltip(ItemTooltipEvent event){
+        if (!(event.getEntity() instanceof Player)){return;}
+        int maxHealth = (int) event.getEntity().getMaxHealth();
+        if (Screen.hasShiftDown() && event.getItemStack().is(LFItems.LIFE_FRUIT.get())) {
+            event.getToolTip().add(Component.literal(Component.translatable("tooltip.lifefruit.had_eat").getString() + "§l§6" + Math.min(maxHealth,clientMaxLifeHeart)/2));
+            if (Math.min(maxHealth,clientMaxLifeHeart) != clientMaxLifeHeart){
+                event.getToolTip().add(Component.literal(Component.translatable("tooltip.lifefruit.had_eat_max").getString() + "§l§6" + clientMaxLifeHeart/2));
+            }
+        }
+        if (Screen.hasShiftDown() && event.getItemStack().is(LFItems.DRAGON_FRUIT.get())) {
+            event.getToolTip().add(Component.literal(Component.translatable("tooltip.lifefruit.had_eat").getString() + "§l§5" + Math.min(clientMaxDragonHeart, Math.min(maxHealth,clientMaxLifeHeart))/2));
+            if( Math.min(clientMaxDragonHeart, Math.min(maxHealth,clientMaxLifeHeart)) != clientMaxDragonHeart){
+                event.getToolTip().add(Component.literal(Component.translatable("tooltip.lifefruit.had_eat_max").getString() + "§l§5" + clientMaxDragonHeart/2));
+            }
+        }
+    }
 
     @SubscribeEvent
     public static void onClientTick(TickEvent.ClientTickEvent event) {
@@ -50,7 +77,6 @@ public class ForgeEventListener {
     public static void onPlayerTick(LivingEvent.LivingTickEvent event) {
 
         if (event.getEntity() instanceof ServerPlayer player){
-            LifeFruitItem.maxHealth = (int) player.getMaxHealth();
             player.getCapability(CurrentLifeHealthCapabilityProvider.CURRENT_LIFE_HEALTH_CAPABILITY).ifPresent((heart) ->
                     Channel.sendToPlayer(new CurrentLifeHealthPacket(heart.getCurrentLifeHeart()), player)
             );

@@ -26,6 +26,7 @@ import top.yourzi.lifefruit.capability.DragonHeart.CurrentDragonHeartCapabilityP
 import top.yourzi.lifefruit.capability.DragonHeart.MaxDragonHeartCapabilityProvider;
 import top.yourzi.lifefruit.capability.LifeHeart.CurrentLifeHealthCapabilityProvider;
 import top.yourzi.lifefruit.capability.LifeHeart.MaxLifeHeartCapabilityProvider;
+import top.yourzi.lifefruit.event.ClientEventListener;
 import top.yourzi.lifefruit.event.ForgeEventListener;
 import top.yourzi.lifefruit.event.ModEventListener;
 import top.yourzi.lifefruit.register.LFBlocks;
@@ -60,6 +61,7 @@ public class Lifefruit {
 
         MinecraftForge.EVENT_BUS.register(new ForgeEventListener());
         MinecraftForge.EVENT_BUS.register(new ModEventListener());
+        MinecraftForge.EVENT_BUS.register(new ClientEventListener());
         MinecraftForge.EVENT_BUS.addGenericListener(Entity.class, this::attachedCapabilities);
 
         modEventBus.addListener(this::init);
@@ -83,17 +85,6 @@ public class Lifefruit {
         ComposterBlock.COMPOSTABLES.put(LFBlocks.LIFE_FRUIT_PLANT.get(), 0.6F);
     }
 
-
-
-    @SubscribeEvent
-    public void onServerStarting(ServerStartingEvent event) {}
-
-
-    @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
-    public static class ClientModEvents {
-        @SubscribeEvent
-        public static void onClientSetup(FMLClientSetupEvent event) {}
-    }
 
     public void attachedCapabilities(AttachCapabilitiesEvent<Entity> event) {
         if (event.getObject() instanceof Player player) {

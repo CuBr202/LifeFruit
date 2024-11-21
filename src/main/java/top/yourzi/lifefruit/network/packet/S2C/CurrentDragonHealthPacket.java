@@ -12,17 +12,14 @@ public class CurrentDragonHealthPacket {
 
     public CurrentDragonHealthPacket(int lifeHealth) {
         this.currentdragonHealth = lifeHealth;
-        CurrentDragonHeartCapabilityProvider.clientCurrentDragonHeart = currentdragonHealth;
     }
 
     public CurrentDragonHealthPacket(FriendlyByteBuf buf) {
         currentdragonHealth = buf.readInt();
-        CurrentDragonHeartCapabilityProvider.clientCurrentDragonHeart = currentdragonHealth;
     }
 
     public void encode(FriendlyByteBuf buf) {
         buf.writeInt(currentdragonHealth);
-        CurrentDragonHeartCapabilityProvider.clientCurrentDragonHeart = currentdragonHealth;
     }
 
     public boolean handle(Supplier<NetworkEvent.Context> supplier) {

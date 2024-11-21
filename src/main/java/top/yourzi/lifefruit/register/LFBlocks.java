@@ -15,6 +15,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import top.yourzi.lifefruit.Lifefruit;
 import top.yourzi.lifefruit.block.EnderDragonFruitCropBlock;
+import top.yourzi.lifefruit.block.LifeFruitPlantBlock;
 import top.yourzi.lifefruit.block.LifeFruitVineCropBlock;
 
 import java.util.function.Supplier;
@@ -32,14 +33,7 @@ public class LFBlocks {
             () -> new EnderDragonFruitCropBlock(BlockBehaviour.Properties.of()));
 
     public static final RegistryObject<Block> LIFE_FRUIT_PLANT = registerBlock("life_fruit_plant",
-            () -> new FlowerBlock(() -> MobEffects.HEALTH_BOOST, 200, BlockBehaviour.Properties.of()
-                    .lightLevel(s -> 13)
-                    .mapColor(MapColor.PLANT)
-                    .sound(SoundType.GRASS)
-                    .noCollission()
-                    .offsetType(BlockBehaviour.OffsetType.XZ)
-                    .pushReaction(PushReaction.DESTROY))
-    );
+            () -> new LifeFruitPlantBlock(BlockBehaviour.Properties.of()));
 
 
     private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block) {

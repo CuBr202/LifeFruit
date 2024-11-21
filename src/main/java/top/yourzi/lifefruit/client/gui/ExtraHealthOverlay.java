@@ -7,6 +7,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 import net.minecraftforge.fml.ModList;
@@ -15,10 +17,8 @@ import top.yourzi.lifefruit.capability.DragonHeart.CurrentDragonHeartCapabilityP
 import top.yourzi.lifefruit.capability.LifeHeart.CurrentLifeHealthCapabilityProvider;
 
 
-
+@OnlyIn(Dist.CLIENT)
 public class ExtraHealthOverlay {
-    Minecraft mc = Minecraft.getInstance();
-    Player player = mc.player;
 
     /** Used with to make the heart bar flash. */
     private static long lifeHealthBlinkTime;
@@ -27,31 +27,33 @@ public class ExtraHealthOverlay {
     private static int lastLifeHealth;
     private static int lastDragonHealth;
 
-    private static int displayLifeHealth;
-    private static int displayDragonHealth;
     /** The last recorded system time */
     private static long lastLifeHealthTime;
     private static long lastDragonHealthTime;
 
-    public static int tickCount;
+    private static int tickCount;
 
     public static void startTick(){
         tickCount++;
     }
 
-
-
+    private static Player getCameraPlayer(Minecraft minecraft) {
+        return minecraft.getCameraEntity() instanceof Player player ? player : null;
+    }
 
 
     private static final Logger LOGGER = LogUtils.getLogger();
 
     public static final IGuiOverlay EXTRA_HEALTH_HUD = (gui, guiGraphics, partialTick, screenWidth, screenHeight) -> {
         Minecraft mc = Minecraft.getInstance();
-        Player player = mc.player;
+        ForgeGui Gui = (ForgeGui) mc.gui;
+        Player player = getCameraPlayer(mc);
         if (player == null) {return;}
 
-        boolean lifeHealthBlink = lifeHealthBlinkTime > (long) gui.getGuiTicks() && ( lifeHealthBlinkTime - (long) gui.getGuiTicks() ) / 3L % 2L == 1L;
-        boolean dragonHealthBlink = dragonHealthBlinkTime > (long) gui.getGuiTicks() && ( dragonHealthBlinkTime - (long) gui.getGuiTicks() ) / 3L % 2L == 1L;
+
+
+        boolean lifeHealthBlink = lifeHealthBlinkTime > (long) Gui.getGuiTicks() && ( lifeHealthBlinkTime - (long) Gui.getGuiTicks() ) / 3L % 2L == 1L;
+        boolean dragonHealthBlink = dragonHealthBlinkTime > (long) Gui.getGuiTicks() && ( dragonHealthBlinkTime - (long) Gui.getGuiTicks() ) / 3L % 2L == 1L;
         long millis = Util.getMillis();
 
         int lifehealth = CurrentLifeHealthCapabilityProvider.clientCurrentLifeHeart;
@@ -63,29 +65,27 @@ public class ExtraHealthOverlay {
 
         if ( lifehealth < lastLifeHealth && player.invulnerableTime > 0 ) {
             lastLifeHealthTime = millis;
-            lifeHealthBlinkTime = gui.getGuiTicks() + 20;
+            lifeHealthBlinkTime = Gui.getGuiTicks() + 20;
         }
         else if ( lifehealth > lastLifeHealth) {
             lastLifeHealthTime = millis;
-            lifeHealthBlinkTime = gui.getGuiTicks() + 10;
+            lifeHealthBlinkTime = Gui.getGuiTicks() + 10;
         }
 
         if ( millis - lastLifeHealthTime > 1000L ) {
-            displayLifeHealth = lifehealth;
             lastLifeHealthTime = millis;
         }
 
         if ( dragonhealth < lastDragonHealth && player.invulnerableTime > 0 ) {
             lastDragonHealthTime = millis;
-            dragonHealthBlinkTime = gui.getGuiTicks() + 20;
+            dragonHealthBlinkTime = Gui.getGuiTicks() + 20;
         }
         else if ( dragonhealth > lastDragonHealth) {
             lastDragonHealthTime = millis;
-            dragonHealthBlinkTime = gui.getGuiTicks() + 10;
+            dragonHealthBlinkTime = Gui.getGuiTicks() + 10;
         }
 
         if ( millis - lastDragonHealthTime > 1000L ) {
-            displayDragonHealth = dragonhealth;
             lastDragonHealthTime = millis;
         }
 
@@ -105,7 +105,7 @@ public class ExtraHealthOverlay {
             offy = 6;
         }
         if (player.hasEffect(MobEffects.REGENERATION) ) {
-            shake = gui.getGuiTicks() % Mth.ceil( player.getMaxHealth() + 5.0F );
+            shake = Gui.getGuiTicks() % Mth.ceil( player.getMaxHealth() + 5.0F );
         }else {
             shake = -1;
         }
@@ -136,15 +136,13 @@ public class ExtraHealthOverlay {
             DRAGON_HEALTH_HALF = new ResourceLocation("lifefruit:textures/gui/dragon_health_frozen_half.png");
         }
 
-
-        ForgeGui Gui = (ForgeGui) mc.gui;
         int x = mc.getWindow().getGuiScaledWidth() / 2 - 90;
 
 
         int y = mc.getWindow().getGuiScaledHeight() - 39;
 
 
-        if (player == null || gui.getMinecraft().options.hideGui || !gui.shouldDrawSurvivalElements()) {
+        if (Gui.getMinecraft().options.hideGui || !Gui.shouldDrawSurvivalElements()) {
             return;
         }
 
@@ -209,7 +207,7 @@ public class ExtraHealthOverlay {
             if (player.hasEffect(MobEffects.REGENERATION) && ModList.get().isLoaded("overflowingbars")) {
                 shake = ((tickCount / 2) % Mth.ceil(Math.min(20.0F, player.getMaxHealth()) + 5.0F));
             } else if (player.hasEffect(MobEffects.REGENERATION)) {
-                shake = gui.getGuiTicks() % Mth.ceil(Math.min(20.0F, player.getMaxHealth()) + 5.0F );
+                shake = Gui.getGuiTicks() % Mth.ceil(Math.min(20.0F, player.getMaxHealth()) + 5.0F );
             }
 
             if (blink && player.getHealth() >= player.getMaxHealth()){
