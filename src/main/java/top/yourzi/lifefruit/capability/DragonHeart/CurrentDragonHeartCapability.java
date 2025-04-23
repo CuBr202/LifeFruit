@@ -23,6 +23,12 @@ public class CurrentDragonHeartCapability {
         }
     }
 
+    public void increaseCurrentDragonHeartByNumbers(int maxDragonHeart, int addNum) {
+        if (maxDragonHeart > currentDragonHeart) {
+            currentDragonHeart += Math.min(maxDragonHeart - currentDragonHeart, addNum);
+        }
+    }
+
     public void decreaseMaxDragonHeart() {
         this.currentDragonHeart--;
     }
