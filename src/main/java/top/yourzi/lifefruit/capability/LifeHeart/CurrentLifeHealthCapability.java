@@ -6,7 +6,7 @@ public class CurrentLifeHealthCapability {
     private int currentLifeHeart;
 
     public CurrentLifeHealthCapability() {
-        this.currentLifeHeart =0;
+        this.currentLifeHeart = 0;
     }
 
     public int getCurrentLifeHeart() {
@@ -18,8 +18,14 @@ public class CurrentLifeHealthCapability {
     }
 
     public void increaseCurrentLifeHeart(int maxLifeHeart) {
-        if ( maxLifeHeart > currentLifeHeart) {
+        if (maxLifeHeart > currentLifeHeart) {
             currentLifeHeart++;
+        }
+    }
+
+    public void increaseCurrentLifeHeartByNumbers(int maxLifeHeart, int addNum) {
+        if (maxLifeHeart > currentLifeHeart) {
+            currentLifeHeart += Math.min(maxLifeHeart - currentLifeHeart, addNum);
         }
     }
 
@@ -27,11 +33,11 @@ public class CurrentLifeHealthCapability {
         this.currentLifeHeart--;
     }
 
-    public void saveNBTData(CompoundTag tag){
+    public void saveNBTData(CompoundTag tag) {
         tag.putInt("currentLifeHeart", currentLifeHeart);
     }
 
-    public void loadNBTData(CompoundTag tag){
+    public void loadNBTData(CompoundTag tag) {
         currentLifeHeart = tag.getInt("currentLifeHeart");
     }
 }
