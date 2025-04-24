@@ -1,0 +1,6 @@
+{
+    "type": "forge:add_features", 
+    "biomes": "minecraft:lush_caves", 
+    "features": "lifefruit:life_fruit", 
+    "step": "vegetal_decoration" 
+}

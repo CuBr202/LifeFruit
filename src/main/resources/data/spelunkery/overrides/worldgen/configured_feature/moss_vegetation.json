@@ -1,0 +1,46 @@
+{
+  "type": "minecraft:simple_block",
+  "config": {
+    "to_place": {
+      "type": "minecraft:weighted_state_provider",
+      "entries": [
+        {
+          "weight": 40,
+          "data": {
+            "Name": "minecraft:flowering_azalea"
+          }
+        },
+        {
+          "weight": 70,
+          "data": {
+            "Name": "minecraft:azalea"
+          }
+        },
+        {
+          "weight": 250,
+          "data": {
+            "Name": "minecraft:moss_carpet"
+          }
+        },
+        {
+          "weight": 500,
+          "data": {
+            "Name": "spelunkery:sporophyte"
+          }
+        },
+        {
+          "weight": 100,
+          "data": {
+            "Name": "spelunkery:tall_sporophyte"
+          }
+        },
+        {
+          "weight": 1,
+          "data": {
+            "Name": "lifefruit:life_fruit_plant"
+          }
+        }
+      ]
+    }
+  }
+}
