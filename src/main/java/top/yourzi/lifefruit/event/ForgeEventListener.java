@@ -19,6 +19,7 @@ import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.ModList;
 import org.slf4j.Logger;
 import top.yourzi.lifefruit.Lifefruit;
 import top.yourzi.lifefruit.capability.DragonHeart.CurrentDragonHeartCapabilityProvider;
@@ -33,6 +34,8 @@ import top.yourzi.lifefruit.network.packet.S2C.CurrentLifeHealthPacket;
 import top.yourzi.lifefruit.network.packet.S2C.MaxDragonHealthPacket;
 import top.yourzi.lifefruit.network.packet.S2C.MaxLifeHealthPacket;
 import top.yourzi.lifefruit.register.LFItems;
+
+import com.github.L_Ender.cataclysm.init.ModEffect;
 
 import static top.yourzi.lifefruit.capability.DragonHeart.MaxDragonHeartCapabilityProvider.clientMaxDragonHeart;
 import static top.yourzi.lifefruit.capability.LifeHeart.MaxLifeHeartCapabilityProvider.clientMaxLifeHeart;
@@ -75,10 +78,19 @@ public class ForgeEventListener {
     }
 
     @SubscribeEvent
-    public static void onPlayerHeal(LivingHealEvent event) {
-        // Change: add instant health and regeneration compability.
+    public void onPlayerHeal(LivingHealEvent event) {
+        int cancelFlag = 0;
         if (event.getEntity() instanceof ServerPlayer player) {
+            if (ModList.get().isLoaded("cataclysm")) {
+                if (event.getEntity().hasEffect(ModEffect.EFFECTABYSSAL_FEAR.get())) {
+                    cancelFlag = 1;
+                    // event.setCanceled(true);
+                }
+            }
+        }
 
+        // Change: add instant health and regeneration compability.
+        if (cancelFlag == 0 && event.getEntity() instanceof ServerPlayer player) {
             float healingAmount = event.getAmount();
             // LOGGER.debug(String.format("Report - healing amount: %f, maxHealth: %f,
             // currentHealth: %f", healingAmount,
@@ -160,56 +172,61 @@ public class ForgeEventListener {
                         });
             });
 
-            // Change: add regeneration compat.
-            // Simulate the vanilla regen mechanics.
-            int regenHealing = 0;
-            for (MobEffectInstance effect : player.getActiveEffects()) {
-                if (effect.getEffect() == MobEffects.REGENERATION) {
-                    int ampl = effect.getAmplifier();
-                    int regenDuration;
-                    if (ampl >= 6)
-                        regenDuration = 1;
-                    else
-                        regenDuration = (int) Math.floor(50 / Math.pow(2, ampl));
-
-                    if (player.tickCount % regenDuration == 0 && player.getMaxHealth() - player.getHealth() < 1e-3)
-                        regenHealing = 1;
-                    // LOGGER.debug(String.format("regenHealing: %d", regenHealing));
+            int cancelFlag = 0;
+            if (ModList.get().isLoaded("cataclysm")) {
+                if (event.getEntity().hasEffect(ModEffect.EFFECTABYSSAL_FEAR.get())) {
+                    cancelFlag = 1;
+                    // event.setCanceled(true);
                 }
             }
+            if (cancelFlag == 0) {
+                // Change: add regeneration compat.
+                // Simulate the vanilla regen mechanics.
+                int regenHealing = 0;
+                for (MobEffectInstance effect : player.getActiveEffects()) {
+                    if (effect.getEffect() == MobEffects.REGENERATION) {
+                        int ampl = effect.getAmplifier();
+                        int regenDuration;
+                        regenDuration = (int) Math.max(Math.floor(50 >> ampl), 1);
 
-            if (regenHealing == 1) {
-                player.getCapability(CurrentLifeHealthCapabilityProvider.CURRENT_LIFE_HEALTH_CAPABILITY)
-                        .ifPresent((heart) -> {
-                            player.getCapability(MaxLifeHeartCapabilityProvider.MAX_LIFE_HEART_CAPABILITY)
-                                    .ifPresent((maxheart) -> {
-                                        /*
-                                         * LOGGER.debug(String.format(
-                                         * "clientLifeHeart: %d, currentLifeHeart: %d, maxLifeHeart: %d",
-                                         * clientLifeHeart, heart.getCurrentLifeHeart(),
-                                         * maxheart.getMaxLifeHeart()));
-                                         */
-                                        if (heart.getCurrentLifeHeart() < Math.min(maxheart.getMaxLifeHeart(),
-                                                player.getMaxHealth()))
-                                            heart.increaseCurrentLifeHeart(maxheart.getMaxLifeHeart());
-                                        else {
-                                            player.getCapability(
-                                                    CurrentDragonHeartCapabilityProvider.CURRENT_DRAGON_HEART_CAPABILITY)
-                                                    .ifPresent((dheart) -> {
-                                                        player.getCapability(
-                                                                MaxDragonHeartCapabilityProvider.MAX_DRAGON_HEART_CAPABILITY)
-                                                                .ifPresent((dmaxheart) -> {
-                                                                    dheart.increaseMaxDragonHeart(
-                                                                            dmaxheart.getMaxDragonHeart());
-                                                                });
-                                                    });
-                                        }
+                        if (player.tickCount % regenDuration == 0 && player.getMaxHealth() - player.getHealth() < 1e-3)
+                            regenHealing = 1;
+                        // LOGGER.debug(String.format("regenHealing: %d", regenHealing));
+                    }
+                }
 
-                                    });
-                        });
+                if (regenHealing == 1) {
+                    player.getCapability(CurrentLifeHealthCapabilityProvider.CURRENT_LIFE_HEALTH_CAPABILITY)
+                            .ifPresent((heart) -> {
+                                player.getCapability(MaxLifeHeartCapabilityProvider.MAX_LIFE_HEART_CAPABILITY)
+                                        .ifPresent((maxheart) -> {
+                                            /*
+                                             * LOGGER.debug(String.format(
+                                             * "clientLifeHeart: %d, currentLifeHeart: %d, maxLifeHeart: %d",
+                                             * clientLifeHeart, heart.getCurrentLifeHeart(),
+                                             * maxheart.getMaxLifeHeart()));
+                                             */
+                                            if (heart.getCurrentLifeHeart() < Math.min(maxheart.getMaxLifeHeart(),
+                                                    player.getMaxHealth()))
+                                                heart.increaseCurrentLifeHeart(maxheart.getMaxLifeHeart());
+                                            else {
+                                                player.getCapability(
+                                                        CurrentDragonHeartCapabilityProvider.CURRENT_DRAGON_HEART_CAPABILITY)
+                                                        .ifPresent((dheart) -> {
+                                                            player.getCapability(
+                                                                    MaxDragonHeartCapabilityProvider.MAX_DRAGON_HEART_CAPABILITY)
+                                                                    .ifPresent((dmaxheart) -> {
+                                                                        dheart.increaseMaxDragonHeart(
+                                                                                dmaxheart.getMaxDragonHeart());
+                                                                    });
+                                                        });
+                                            }
 
+                                        });
+                            });
+
+                }
             }
-
         }
     }
 

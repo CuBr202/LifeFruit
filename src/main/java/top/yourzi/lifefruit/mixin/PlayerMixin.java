@@ -22,6 +22,8 @@ import top.yourzi.lifefruit.capability.LifeHeart.CurrentLifeHealthCapabilityProv
 import top.yourzi.lifefruit.capability.LifeHeart.MaxLifeHeartCapabilityProvider;
 
 import top.yourzi.lifefruit.utils.MixinUtils;
+import net.minecraftforge.fml.ModList;
+import com.github.L_Ender.cataclysm.init.ModEffect;
 import java.util.Random;
 
 @Mixin(Player.class)
@@ -42,6 +44,8 @@ public abstract class PlayerMixin extends LivingEntity {
     @Shadow
     private boolean reducedDebugInfo;
 
+    // @Shadow
+
     protected PlayerMixin(EntityType<? extends LivingEntity> entityType, Level level) {
         super(entityType, level);
     }
@@ -50,9 +54,17 @@ public abstract class PlayerMixin extends LivingEntity {
     public void aiStep(CallbackInfo ci) {
         int exhaustion = (int) this.getFoodData().getExhaustionLevel();
 
+        int _cancelFlag = 0;
+        if (ModList.get().isLoaded("cataclysm")) {
+            if (this.hasEffect(ModEffect.EFFECTABYSSAL_FEAR.get())) {
+                _cancelFlag = 1;
+            }
+        }
+
+        final int cancelFlag = _cancelFlag;
         if (this.level().getGameRules().getBoolean(GameRules.RULE_NATURAL_REGENERATION)
                 && this.getHealth() >= this.getMaxHealth() && !this.getFoodData().needsFood()) {
-            if (this.tickCount % 20 == 0) {
+            if (this.tickCount % 10 == 0) {
 
                 this.getCapability(CurrentLifeHealthCapabilityProvider.CURRENT_LIFE_HEALTH_CAPABILITY)
                         .ifPresent((heart) -> {
@@ -63,7 +75,8 @@ public abstract class PlayerMixin extends LivingEntity {
                                                 this.getMaxHealth());
 
                                         if (heart.getCurrentLifeHeart() < maxLifeHeart) {
-                                            heart.increaseCurrentLifeHeart(maxLifeHeart);
+                                            if (cancelFlag == 0)
+                                                heart.increaseCurrentLifeHeart(maxLifeHeart);
                                             this.getFoodData().setExhaustion(exhaustion + 6);
 
                                         } else if (heart.getCurrentLifeHeart() >= maxLifeHeart) {
@@ -80,8 +93,10 @@ public abstract class PlayerMixin extends LivingEntity {
 
                                                                     if (dragonheart
                                                                             .getCurrentDragonHeart() < maxDragonHeart) {
-                                                                        dragonheart
-                                                                                .increaseMaxDragonHeart(maxDragonHeart);
+                                                                        if (cancelFlag == 0)
+                                                                            dragonheart
+                                                                                    .increaseMaxDragonHeart(
+                                                                                            maxDragonHeart);
 
                                                                         this.getFoodData()
                                                                                 .setExhaustion(exhaustion + 6);

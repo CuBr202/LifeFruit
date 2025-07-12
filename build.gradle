@@ -3,6 +3,11 @@ buildscript {
         // These repositories are only for Gradle plugins, put any other repositories in the repository block further below
         maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
         mavenCentral()
+
+        maven {
+            name = "Illusive Soulworks maven"
+            url = "https://maven.theillusivec4.top/"
+        }
     }
     dependencies {
         classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
@@ -121,6 +126,25 @@ dependencies {
     compileOnly(fg.deobf("mezz.jei:jei-1.20.1-common-api:15.3.0.8"))
     compileOnly(fg.deobf("mezz.jei:jei-1.20.1-forge-api:15.3.0.8"))
     runtimeOnly(fg.deobf("mezz.jei:jei-1.20.1-forge:15.3.0.8"))
+
+    //curios
+    compileOnly(fg.deobf("top.theillusivec4.curios:curios-forge:5.14.1+1.20.1:api"))
+    runtimeOnly(fg.deobf("top.theillusivec4.curios:curios-forge:5.14.1+1.20.1"))
+
+    //Cataclysm
+    compileOnly(fg.deobf("curse.maven:lionfish-api-1001614:5922047"))
+    runtimeOnly(fg.deobf("curse.maven:lionfish-api-1001614:5922047"))
+
+    compileOnly(fg.deobf("curse.maven:lendercataclysm-551586:6729683"))
+    runtimeOnly(fg.deobf("curse.maven:lendercataclysm-551586:6729683"))
+
+
+    //majrusz difficulty
+    //compileOnly(fg.deobf("curse.maven:majrusz-library-437409:5302100"))
+    //runtimeOnly(fg.deobf("curse.maven:majrusz-library-437409:5302100"))
+
+    //compileOnly(fg.deobf("curse.maven:majruszs-progressive-difficulty-430642:5293465"))
+    //runtimeOnly(fg.deobf("curse.maven:majruszs-progressive-difficulty-430642:5293465"))
 
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
