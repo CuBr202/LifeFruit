@@ -7,6 +7,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.ai.attributes.*;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
@@ -15,7 +16,6 @@ import net.minecraftforge.fml.ModList;
 import org.slf4j.Logger;
 import top.yourzi.lifefruit.capability.DragonHeart.CurrentDragonHeartCapabilityProvider;
 import top.yourzi.lifefruit.capability.LifeHeart.CurrentLifeHealthCapabilityProvider;
-
 
 @OnlyIn(Dist.CLIENT)
 public class ExtraHealthOverlay {
@@ -33,7 +33,7 @@ public class ExtraHealthOverlay {
 
     private static int tickCount;
 
-    public static void startTick(){
+    public static void startTick() {
         tickCount++;
     }
 
@@ -41,19 +41,20 @@ public class ExtraHealthOverlay {
         return minecraft.getCameraEntity() instanceof Player player ? player : null;
     }
 
-
     private static final Logger LOGGER = LogUtils.getLogger();
 
     public static final IGuiOverlay EXTRA_HEALTH_HUD = (gui, guiGraphics, partialTick, screenWidth, screenHeight) -> {
         Minecraft mc = Minecraft.getInstance();
         ForgeGui Gui = (ForgeGui) mc.gui;
         Player player = getCameraPlayer(mc);
-        if (player == null) {return;}
+        if (player == null) {
+            return;
+        }
 
-
-
-        boolean lifeHealthBlink = lifeHealthBlinkTime > (long) Gui.getGuiTicks() && ( lifeHealthBlinkTime - (long) Gui.getGuiTicks() ) / 3L % 2L == 1L;
-        boolean dragonHealthBlink = dragonHealthBlinkTime > (long) Gui.getGuiTicks() && ( dragonHealthBlinkTime - (long) Gui.getGuiTicks() ) / 3L % 2L == 1L;
+        boolean lifeHealthBlink = lifeHealthBlinkTime > (long) Gui.getGuiTicks()
+                && (lifeHealthBlinkTime - (long) Gui.getGuiTicks()) / 3L % 2L == 1L;
+        boolean dragonHealthBlink = dragonHealthBlinkTime > (long) Gui.getGuiTicks()
+                && (dragonHealthBlinkTime - (long) Gui.getGuiTicks()) / 3L % 2L == 1L;
         long millis = Util.getMillis();
 
         int lifehealth = CurrentLifeHealthCapabilityProvider.clientCurrentLifeHeart;
@@ -63,54 +64,62 @@ public class ExtraHealthOverlay {
         int dragonHearts = dragonhealth / 2;
         int halfDragonHearts = dragonhealth % 2;
 
-        if ( lifehealth < lastLifeHealth && player.invulnerableTime > 0 ) {
+        if (lifehealth < lastLifeHealth && player.invulnerableTime > 0) {
             lastLifeHealthTime = millis;
             lifeHealthBlinkTime = Gui.getGuiTicks() + 20;
-        }
-        else if ( lifehealth > lastLifeHealth) {
+        } else if (lifehealth > lastLifeHealth) {
             lastLifeHealthTime = millis;
             lifeHealthBlinkTime = Gui.getGuiTicks() + 10;
         }
 
-        if ( millis - lastLifeHealthTime > 1000L ) {
+        if (millis - lastLifeHealthTime > 1000L) {
             lastLifeHealthTime = millis;
         }
 
-        if ( dragonhealth < lastDragonHealth && player.invulnerableTime > 0 ) {
+        if (dragonhealth < lastDragonHealth && player.invulnerableTime > 0) {
             lastDragonHealthTime = millis;
             dragonHealthBlinkTime = Gui.getGuiTicks() + 20;
-        }
-        else if ( dragonhealth > lastDragonHealth) {
+        } else if (dragonhealth > lastDragonHealth) {
             lastDragonHealthTime = millis;
             dragonHealthBlinkTime = Gui.getGuiTicks() + 10;
         }
 
-        if ( millis - lastDragonHealthTime > 1000L ) {
+        if (millis - lastDragonHealthTime > 1000L) {
             lastDragonHealthTime = millis;
         }
 
         lastLifeHealth = lifehealth;
         lastDragonHealth = dragonhealth;
 
-
         boolean blink = lifeHealthBlink || dragonHealthBlink;
         int shake = -1;
         int offy = 0;
 
+        AttributeMap attributes = player.getAttributes();
+        double healthValue = attributes.getValue(Attributes.MAX_HEALTH);
+        // LOGGER.info(String.format("healthValue: %f", healthValue));
 
+        /*
+         * 
+         * if (player.hasEffect(MobEffects.HEALTH_BOOST)
+         * && player.getEffect(MobEffects.HEALTH_BOOST).getAmplifier() <= 35) {
+         * offy = player.getEffect(MobEffects.HEALTH_BOOST).getAmplifier() / 5 - 1;
+         * } else {
+         * offy = 6;
+         * }
+         */
 
-        if (player.hasEffect(MobEffects.HEALTH_BOOST) && player.getEffect(MobEffects.HEALTH_BOOST).getAmplifier() <= 35){
-            offy = player.getEffect(MobEffects.HEALTH_BOOST).getAmplifier() / 5 - 1;
-        }else {
+        if (healthValue / 20 <= 9 && healthValue / 20 >= 1) {
+            offy = (int) (healthValue / 20) - 3;
+        } else {
             offy = 6;
         }
-        if (player.hasEffect(MobEffects.REGENERATION) ) {
-            shake = Gui.getGuiTicks() % Mth.ceil( player.getMaxHealth() + 5.0F );
-        }else {
+        // LOGGER.info(String.format("offy: %d", offy));
+        if (player.hasEffect(MobEffects.REGENERATION)) {
+            shake = Gui.getGuiTicks() % Mth.ceil(player.getMaxHealth() + 5.0F);
+        } else {
             shake = -1;
         }
-
-
 
         ResourceLocation LIFE_HEALTH = new ResourceLocation("lifefruit:textures/gui/life_health.png");
         ResourceLocation LIFE_HEALTH_HALF = new ResourceLocation("lifefruit:textures/gui/life_health_half.png");
@@ -138,26 +147,24 @@ public class ExtraHealthOverlay {
 
         int x = mc.getWindow().getGuiScaledWidth() / 2 - 90;
 
-
         int y = mc.getWindow().getGuiScaledHeight() - 39;
-
 
         if (Gui.getMinecraft().options.hideGui || !Gui.shouldDrawSurvivalElements()) {
             return;
         }
 
-        if(     !ModList.get().isLoaded("mantle") &&
+        if (!ModList.get().isLoaded("mantle") &&
                 !ModList.get().isLoaded("colorfulhearts") &&
                 !ModList.get().isLoaded("classicbar") &&
-                !ModList.get().isLoaded("overflowingbars")
-        ){
-            if (blink && player.getHealth() >= player.getMaxHealth()){
-                for (int i = 0; i < player.getMaxHealth() / 2; i ++){
+                !ModList.get().isLoaded("overflowingbars")) {
+            if (blink && player.getHealth() >= player.getMaxHealth()) {
+                for (int i = 0; i < player.getMaxHealth() / 2; i++) {
                     int dy = y;
-                    if ( i == shake ) {
-                        dy = y -2;
+                    if (i == shake) {
+                        dy = y - 2;
                     }
-                    guiGraphics.blit(BLINK_HEALTH, x + (i % 10 * 8) - 1, dy - (((i) / 10) * (9 - offy)) - 1, 90, 0, 0, 10, 10,
+                    guiGraphics.blit(BLINK_HEALTH, x + (i % 10 * 8) - 1, dy - (((i) / 10) * (9 - offy)) - 1, 90, 0, 0,
+                            10, 10,
                             10, 10);
                 }
             }
@@ -165,56 +172,56 @@ public class ExtraHealthOverlay {
             if (lifehealth > 0) {
                 for (int i = 0; i < lifeHearts + halfLifeHearts; i++) {
                     int dy = y;
-                    if ( i == shake ) {
-                        dy = y -2;
+                    if (i == shake) {
+                        dy = y - 2;
                     }
                     guiGraphics.blit(LIFE_HEALTH_HALF, x + (i % 10 * 8), dy - (((i) / 10) * (9 - offy)), 90, 0, 0, 8, 8,
                             8, 8);
                 }
                 for (int i = 0; i < lifeHearts; i++) {
                     int dy = y;
-                    if ( i == shake ) {
-                        dy = y -2;
+                    if (i == shake) {
+                        dy = y - 2;
                     }
                     guiGraphics.blit(LIFE_HEALTH, x + (i % 10 * 8), dy - (((i) / 10) * (9 - offy)), 90, 0, 0, 8, 8,
                             8, 8);
                 }
             }
 
-
             if (dragonhealth > 0) {
                 for (int i = 0; i < dragonHearts + halfDragonHearts; i++) {
                     int dy = y;
-                    if ( i == shake ) {
-                        dy = y -2;
+                    if (i == shake) {
+                        dy = y - 2;
                     }
-                    guiGraphics.blit(DRAGON_HEALTH_HALF, x + (i % 10 * 8), dy - (((i) / 10) * (9 - offy)), 90, 0, 0, 8, 8,
+                    guiGraphics.blit(DRAGON_HEALTH_HALF, x + (i % 10 * 8), dy - (((i) / 10) * (9 - offy)), 90, 0, 0, 8,
+                            8,
                             8, 8);
 
                 }
                 for (int i = 0; i < dragonHearts; i++) {
                     int dy = y;
-                    if ( i == shake ) {
-                        dy = y -2;
+                    if (i == shake) {
+                        dy = y - 2;
                     }
                     guiGraphics.blit(DRAGON_HEALTH, x + (i % 10 * 8), dy - (((i) / 10) * (9 - offy)), 90, 0, 0, 8, 8,
                             8, 8);
 
                 }
             }
-        }else {
+        } else {
 
             if (player.hasEffect(MobEffects.REGENERATION) && ModList.get().isLoaded("overflowingbars")) {
                 shake = ((tickCount / 2) % Mth.ceil(Math.min(20.0F, player.getMaxHealth()) + 5.0F));
             } else if (player.hasEffect(MobEffects.REGENERATION)) {
-                shake = Gui.getGuiTicks() % Mth.ceil(Math.min(20.0F, player.getMaxHealth()) + 5.0F );
+                shake = Gui.getGuiTicks() % Mth.ceil(Math.min(20.0F, player.getMaxHealth()) + 5.0F);
             }
 
-            if (blink && player.getHealth() >= player.getMaxHealth()){
-                for (int i = 0; i < 10; i ++){
+            if (blink && player.getHealth() >= player.getMaxHealth()) {
+                for (int i = 0; i < 10; i++) {
                     int dy = y;
-                    if ( i == shake ) {
-                        dy = y -2;
+                    if (i == shake) {
+                        dy = y - 2;
                     }
                     guiGraphics.blit(BLINK_HEALTH, x + (i % 10 * 8) - 1, dy - 1, 90, 0, 0, 10, 10,
                             10, 10);
@@ -223,11 +230,11 @@ public class ExtraHealthOverlay {
 
             if (lifehealth > 0) {
                 boolean overlay = (lifeHearts + halfLifeHearts) > 10;
-                if (overlay){
+                if (overlay) {
                     for (int i = 0; i < 10; i++) {
                         int dy = y;
-                        if ( i == shake ) {
-                            dy = y -2;
+                        if (i == shake) {
+                            dy = y - 2;
                         }
                         guiGraphics.blit(LIFE_HEALTH, x + (i * 8), dy, 90, 0, 0, 8, 8,
                                 8, 8);
@@ -236,32 +243,33 @@ public class ExtraHealthOverlay {
                     }
                 }
 
-                for (int i = 0; i < ((lifeHearts + halfLifeHearts) % 10 == 0 ? 10 : (lifeHearts + halfLifeHearts) % 10); i++) {
+                for (int i = 0; i < ((lifeHearts + halfLifeHearts) % 10 == 0 ? 10
+                        : (lifeHearts + halfLifeHearts) % 10); i++) {
                     int dy = y;
-                    if ( i == shake ) {
-                        dy = y -2;
+                    if (i == shake) {
+                        dy = y - 2;
                     }
                     guiGraphics.blit(LIFE_HEALTH_HALF, x + (i % 10 * 8), dy, 90, 0, 0, 8, 8,
                             8, 8);
                 }
-                for (int i = 0; i < ((((lifeHearts + halfLifeHearts) - 1) % 10 == 0) && halfLifeHearts == 1 ? 0 : ((lifeHearts) % 10 == 0 ? 10 : (lifeHearts) % 10)) ; i++) {
+                for (int i = 0; i < ((((lifeHearts + halfLifeHearts) - 1) % 10 == 0) && halfLifeHearts == 1 ? 0
+                        : ((lifeHearts) % 10 == 0 ? 10 : (lifeHearts) % 10)); i++) {
                     int dy = y;
-                    if ( i == shake ) {
-                        dy = y -2;
+                    if (i == shake) {
+                        dy = y - 2;
                     }
                     guiGraphics.blit(LIFE_HEALTH, x + (i % 10 * 8), dy, 90, 0, 0, 8, 8,
                             8, 8);
                 }
             }
 
-
             if (dragonhealth > 0) {
                 boolean overlay = (dragonHearts + halfDragonHearts) > 10;
-                if (overlay){
+                if (overlay) {
                     for (int i = 0; i < 10; i++) {
                         int dy = y;
-                        if ( i == shake ) {
-                            dy = y -2;
+                        if (i == shake) {
+                            dy = y - 2;
                         }
                         guiGraphics.blit(DRAGON_HEALTH, x + (i * 8), dy, 90, 0, 0, 8, 8,
                                 8, 8);
@@ -270,25 +278,28 @@ public class ExtraHealthOverlay {
                     }
                 }
 
-                for (int i = 0; i < ((dragonHearts + halfDragonHearts) % 10 == 0 ? 10 : (dragonHearts + halfDragonHearts) % 10); i++) {
+                for (int i = 0; i < ((dragonHearts + halfDragonHearts) % 10 == 0 ? 10
+                        : (dragonHearts + halfDragonHearts) % 10); i++) {
                     int dy = y;
-                    if ( i == shake ) {
-                        dy = y -2;
+                    if (i == shake) {
+                        dy = y - 2;
                     }
                     guiGraphics.blit(DRAGON_HEALTH_HALF, x + (i % 10 * 8), dy, 90, 0, 0, 8, 8,
                             8, 8);
 
                 }
-                for (int i = 0; i <((((dragonHearts + halfDragonHearts) - 1) % 10 == 0) && halfDragonHearts == 1 ? 0 : ((dragonHearts) % 10 == 0 ? 10 : (dragonHearts) % 10)); i++) {
+                for (int i = 0; i < ((((dragonHearts + halfDragonHearts) - 1) % 10 == 0) && halfDragonHearts == 1 ? 0
+                        : ((dragonHearts) % 10 == 0 ? 10 : (dragonHearts) % 10)); i++) {
                     int dy = y;
-                    if ( i == shake ) {
-                        dy = y -2;
+                    if (i == shake) {
+                        dy = y - 2;
                     }
                     guiGraphics.blit(DRAGON_HEALTH, x + (i % 10 * 8), dy, 90, 0, 0, 8, 8,
                             8, 8);
 
                 }
             }
-        };
+        }
+        ;
     };
 }
