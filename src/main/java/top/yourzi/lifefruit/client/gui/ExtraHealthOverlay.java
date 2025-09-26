@@ -112,7 +112,7 @@ public class ExtraHealthOverlay {
         int totalHealthValue = (int) healthValue + (int) absorptionValue;
 
         if (totalHealthValue / 20 <= 9 && totalHealthValue / 20 >= 1) {
-            offy = (int) (totalHealthValue / 20) - 2; // 2 is right
+            offy = (int) ((float) totalHealthValue / 20.0f - 0.01f) - 2; // 2 is right, the 0.01 is for flooring
         } else {
             offy = 6;
         }

@@ -98,24 +98,35 @@ public class ForgeEventListener {
 
             if (healingAmount >= player.getMaxHealth() - player.getHealth()) {
                 float healingAmountLifefruit = healingAmount - (player.getMaxHealth() - player.getHealth());
+                /*
+                 * LOGGER.debug(String.format(
+                 * "Report Before - healingAmount: %f, max health: %f, current health: %f",
+                 * healingAmount, player.getMaxHealth(), player.getHealth()));
+                 */
 
                 player.getCapability(CurrentLifeHealthCapabilityProvider.CURRENT_LIFE_HEALTH_CAPABILITY)
                         .ifPresent((heart) -> {
                             player.getCapability(MaxLifeHeartCapabilityProvider.MAX_LIFE_HEART_CAPABILITY)
                                     .ifPresent((maxheart) -> {
-                                        heart.increaseCurrentLifeHeartByNumbers(maxheart.getMaxLifeHeart(),
+                                        if (heart.getCurrentLifeHeart() > player.getMaxHealth()) {
+                                            heart.setCurrentLifeHeart(Math.round(player.getMaxHealth()));
+                                        }
+                                        float realGap = Math.min(maxheart.getMaxLifeHeart(),
+                                                (float) Math.round(player.getMaxHealth()))
+                                                - heart.getCurrentLifeHeart();
+
+                                        heart.increaseCurrentLifeHeartByNumbers(
+                                                (int) Math.min(maxheart.getMaxLifeHeart(), player.getMaxHealth()),
                                                 (int) healingAmountLifefruit);
 
                                         /*
                                          * LOGGER.debug(String.format(
-                                         * "Report - max life heart: %d, current life heart: %d, life fruit heal: %f",
+                                         * "Report - max life heart: %d, current life heart: %d, life fruit heal: %f, real gap: %f"
+                                         * ,
                                          * maxheart.getMaxLifeHeart(), heart.getCurrentLifeHeart(),
-                                         * healingAmountLifefruit));
+                                         * healingAmountLifefruit, realGap));
                                          */
-                                        float realGap = Math.min(maxheart.getMaxLifeHeart(),
-                                                (float) Math.round(player.getMaxHealth()))
-                                                - Math.min(heart.getCurrentLifeHeart(),
-                                                        (float) Math.round(player.getMaxHealth()));
+
                                         if (healingAmountLifefruit >= realGap) {
                                             float healingAmountDragonfruit = healingAmountLifefruit
                                                     - realGap;
