@@ -106,10 +106,19 @@ public class ForgeEventListener {
                                         heart.increaseCurrentLifeHeartByNumbers(maxheart.getMaxLifeHeart(),
                                                 (int) healingAmountLifefruit);
 
-                                        if (healingAmountLifefruit >= maxheart.getMaxLifeHeart()
-                                                - heart.getCurrentLifeHeart()) {
+                                        /*
+                                         * LOGGER.debug(String.format(
+                                         * "Report - max life heart: %d, current life heart: %d, life fruit heal: %f",
+                                         * maxheart.getMaxLifeHeart(), heart.getCurrentLifeHeart(),
+                                         * healingAmountLifefruit));
+                                         */
+                                        float realGap = Math.min(maxheart.getMaxLifeHeart(),
+                                                (float) Math.round(player.getMaxHealth()))
+                                                - Math.min(heart.getCurrentLifeHeart(),
+                                                        (float) Math.round(player.getMaxHealth()));
+                                        if (healingAmountLifefruit >= realGap) {
                                             float healingAmountDragonfruit = healingAmountLifefruit
-                                                    - (maxheart.getMaxLifeHeart() - heart.getCurrentLifeHeart());
+                                                    - realGap;
                                             player.getCapability(
                                                     CurrentDragonHeartCapabilityProvider.CURRENT_DRAGON_HEART_CAPABILITY)
                                                     .ifPresent((dheart) -> {

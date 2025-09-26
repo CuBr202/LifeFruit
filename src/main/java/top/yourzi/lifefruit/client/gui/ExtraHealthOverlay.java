@@ -97,6 +97,7 @@ public class ExtraHealthOverlay {
 
         AttributeMap attributes = player.getAttributes();
         double healthValue = attributes.getValue(Attributes.MAX_HEALTH);
+        float absorptionValue = player.getAbsorptionAmount();
         // LOGGER.info(String.format("healthValue: %f", healthValue));
 
         /*
@@ -108,9 +109,10 @@ public class ExtraHealthOverlay {
          * offy = 6;
          * }
          */
+        int totalHealthValue = (int) healthValue + (int) absorptionValue;
 
-        if (healthValue / 20 <= 9 && healthValue / 20 >= 1) {
-            offy = (int) (healthValue / 20) - 3;
+        if (totalHealthValue / 20 <= 9 && totalHealthValue / 20 >= 1) {
+            offy = (int) (totalHealthValue / 20) - 2; // 2 is right
         } else {
             offy = 6;
         }
