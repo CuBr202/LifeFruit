@@ -109,14 +109,15 @@ public class ForgeEventListener {
                             player.getCapability(MaxLifeHeartCapabilityProvider.MAX_LIFE_HEART_CAPABILITY)
                                     .ifPresent((maxheart) -> {
                                         if (heart.getCurrentLifeHeart() > player.getMaxHealth()) {
-                                            heart.setCurrentLifeHeart(Math.round(player.getMaxHealth()));
+                                            heart.setCurrentLifeHeart((int) Math.floor(player.getMaxHealth()));
                                         }
                                         float realGap = Math.min(maxheart.getMaxLifeHeart(),
-                                                (float) Math.round(player.getMaxHealth()))
+                                                (float) Math.floor(player.getMaxHealth()))
                                                 - heart.getCurrentLifeHeart();
 
                                         heart.increaseCurrentLifeHeartByNumbers(
-                                                (int) Math.min(maxheart.getMaxLifeHeart(), player.getMaxHealth()),
+                                                (int) Math.min(maxheart.getMaxLifeHeart(),
+                                                        (int) Math.floor(player.getMaxHealth())),
                                                 (int) healingAmountLifefruit);
 
                                         /*
@@ -220,16 +221,19 @@ public class ForgeEventListener {
                             .ifPresent((heart) -> {
                                 player.getCapability(MaxLifeHeartCapabilityProvider.MAX_LIFE_HEART_CAPABILITY)
                                         .ifPresent((maxheart) -> {
-                                            /*
-                                             * LOGGER.debug(String.format(
-                                             * "clientLifeHeart: %d, currentLifeHeart: %d, maxLifeHeart: %d",
-                                             * clientLifeHeart, heart.getCurrentLifeHeart(),
-                                             * maxheart.getMaxLifeHeart()));
-                                             */
+                                            if (heart.getCurrentLifeHeart() > player.getMaxHealth()) {
+                                                heart.setCurrentLifeHeart((int) Math.floor(player.getMaxHealth()));
+                                            }
                                             if (heart.getCurrentLifeHeart() < Math.min(maxheart.getMaxLifeHeart(),
-                                                    player.getMaxHealth()))
+                                                    Math.floor(player.getMaxHealth()))) {
                                                 heart.increaseCurrentLifeHeart(maxheart.getMaxLifeHeart());
-                                            else {
+                                                /*
+                                                 * LOGGER.debug(String.format(
+                                                 * "maxHealth: %f, currentLifeHeart: %d, maxLifeHeart: %d",
+                                                 * player.getMaxHealth(), heart.getCurrentLifeHeart(),
+                                                 * maxheart.getMaxLifeHeart()));
+                                                 */
+                                            } else {
                                                 player.getCapability(
                                                         CurrentDragonHeartCapabilityProvider.CURRENT_DRAGON_HEART_CAPABILITY)
                                                         .ifPresent((dheart) -> {

@@ -139,9 +139,9 @@ public abstract class PlayerMixin extends LivingEntity {
                                 heart.setCurrentLifeHeart(
                                         (int) (heart.getCurrentLifeHeart() - MixinUtils.randomHurt(hurt, random)));
                             } else if ((heart.getCurrentLifeHeart() + dragonheart.getCurrentDragonHeart()) <= hurt) {
+                                hurt = hurt - (heart.getCurrentLifeHeart() + dragonheart.getCurrentDragonHeart());
                                 dragonheart.setCurrentDragonHeart(0);
                                 heart.setCurrentLifeHeart(0);
-                                hurt = hurt - (heart.getCurrentLifeHeart() + dragonheart.getCurrentDragonHeart());
                                 this.setHealth(this.getHealth() - MixinUtils.randomHurt(hurt, random));
                             }
                             this.gameEvent(GameEvent.ENTITY_DAMAGE);
